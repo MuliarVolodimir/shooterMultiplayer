@@ -43,17 +43,16 @@ public class Weapon : NetworkBehaviour
         RaycastHit hit;
 
         TrailRenderer trail = Instantiate(_trail);
+
         NetworkObject trailNetObj = trail.GetComponent<NetworkObject>();
         trailNetObj.Spawn();
 
         if (Physics.Raycast(rayOrigin, _fpsCam.transform.forward, out hit, _weaponRange))
         {
-            // Викликаємо метод для переміщення Trail на сервері
             MoveTrailServerRpc(trailNetObj.NetworkObjectId, _bulletSpawnPoint.position, hit.point);
         }
         else
         {
-            // Викликаємо метод для переміщення Trail на сервері
             MoveTrailServerRpc(trailNetObj.NetworkObjectId, _bulletSpawnPoint.position, rayOrigin + (_fpsCam.transform.forward * _weaponRange));
         }
         SpawnMuzzle();
