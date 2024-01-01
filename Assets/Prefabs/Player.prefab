@@ -776,9 +776,9 @@ MonoBehaviour:
   _fireRate: 0.1
   _weaponRange: 50
   _bulletSpawnPoint: {fileID: 957832604702750548}
-  _trail: {fileID: 2749646774521259863, guid: 373a6a3c6bd3cc442ae6fb8b071855e4, type: 3}
   _fpsCam: {fileID: 9037893689518662516}
-  _muzzlePrefab: {fileID: 8800206498015667286, guid: c1a3cdc19a3aaa640913b06ea1053714, type: 3}
+  _trail: {fileID: 2674326808840117349, guid: 373a6a3c6bd3cc442ae6fb8b071855e4, type: 3}
+  _muzzlePrefab: {fileID: 3410325949639252974, guid: 5f8dd69e0bcecab4aa2907f90943a5c1, type: 3}
   _scaleFactor: 1
   _timeToDestroy: 0.1
 --- !u!1 &4926935733746777234
