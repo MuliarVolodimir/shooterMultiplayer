@@ -1,16 +1,12 @@
 using System;
-using TMPro;
-using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
-using Random = System.Random;
 
 public class FPSController : NetworkBehaviour
 {
     [SerializeField] CharacterController _cc;
     [SerializeField] GameObject _head;
     [SerializeField] Weapon _weapon;
-    [SerializeField] TextMeshProUGUI _text;
 
     [SerializeField] float _speed;
     [SerializeField] float _jumpForce;
@@ -18,8 +14,6 @@ public class FPSController : NetworkBehaviour
     [SerializeField] float _gravity;
 
     Vector3 _directionVector;
-    private NetworkVariable<int> _numb = new NetworkVariable<int>(0, 
-        NetworkVariableReadPermission.Everyone);
 
     [SerializeField] float _verticalVelocity;
     float _mouseX;
@@ -28,11 +22,11 @@ public class FPSController : NetworkBehaviour
 
     private void Start()
     {
-        transform.position = new Vector3(0, 3, 0);
-
+        transform.position = new Vector3(0, 2, 0);
         if (!IsOwner)
         {
-            //this.GetComponent<FPSController>().enabled = false;
+            this.GetComponent<FPSController>().enabled = false;
+
             this.GetComponentInChildren<Camera>().gameObject.SetActive(false);
             _weapon.enabled = false;
             return;
@@ -48,7 +42,6 @@ public class FPSController : NetworkBehaviour
         Rotation();
         Movement();
     }
-
     private void Rotation()
     {
         _mouseX += Input.GetAxis("Mouse X") * _sensitivity * Time.deltaTime;
@@ -59,6 +52,7 @@ public class FPSController : NetworkBehaviour
         transform.rotation = Quaternion.Euler(0, _mouseX, 0);
         _head.transform.rotation = Quaternion.Euler(-_mouseY, _mouseX, 0);
     }
+
     private void GravityAndJump()
     {
         if (_cc.isGrounded)
@@ -77,6 +71,7 @@ public class FPSController : NetworkBehaviour
             _cc.stepOffset = 0f;
         }
     }
+
     private void Movement()
     {
         _directionVector = new Vector3(Input.GetAxis("Horizontal") * _speed, _verticalVelocity, Input.GetAxis("Vertical") * _speed);
