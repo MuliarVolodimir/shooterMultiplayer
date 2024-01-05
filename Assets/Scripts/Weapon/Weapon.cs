@@ -1,16 +1,26 @@
-using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using DG.Tweening;
 
 public class Weapon : NetworkBehaviour
 {
+
+    [Header("WeaponSettings")]
     [SerializeField] float _fireRate = 0.25f;
     [SerializeField] float _weaponRange = 50f;
 
+    [Space(10)]
+    [Header("Weapon`s Bullet")]
+
+    [SerializeField] GameObject _bullet;
+    [SerializeField] float _bulletLiveTime;
     [SerializeField] Transform _bulletSpawnPoint;
-    [SerializeField] TrailRenderer _trail;
     [SerializeField] Camera _fpsCam;
 
+    
+    [Header("WeaponEffects")]
+
+    
     [SerializeField] GameObject _muzzlePrefab;
     [SerializeField] private float _scaleFactor;
     [SerializeField] private float _timeToDestroy;
@@ -30,8 +40,6 @@ public class Weapon : NetworkBehaviour
 
             if (Input.GetButton("Fire1"))
             {
-                ShootLogic();
-
                 ShootLogicServerRpc();
             }
         }
@@ -39,82 +47,31 @@ public class Weapon : NetworkBehaviour
     [ServerRpc]
     void ShootLogicServerRpc()
     {
-        Vector3 rayOrigin = _fpsCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        Vector3 rayStart = _fpsCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
 
-        TrailRenderer trail = Instantiate(_trail);
-        NetworkObject trailNetObj = trail.GetComponent<NetworkObject>();
-        trailNetObj.Spawn();
+        GameObject bullet = Instantiate(_bullet, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
 
-        if (Physics.Raycast(rayOrigin, _fpsCam.transform.forward, out hit, _weaponRange))
+        bullet.GetComponent<NetworkObject>().Spawn();
+
+        if (Physics.Raycast(rayStart, _fpsCam.transform.forward, out hit, _weaponRange))
         {
-            // Викликаємо метод для переміщення Trail на сервері
-            MoveTrailServerRpc(trailNetObj.NetworkObjectId, _bulletSpawnPoint.position, hit.point);
+            bullet.transform.DOMove(hit.point, _bulletLiveTime);
         }
         else
         {
-            // Викликаємо метод для переміщення Trail на сервері
-            MoveTrailServerRpc(trailNetObj.NetworkObjectId, _bulletSpawnPoint.position, rayOrigin + (_fpsCam.transform.forward * _weaponRange));
+            bullet.transform.DOMove(rayStart + (_fpsCam.transform.forward * _weaponRange), _bulletLiveTime);
         }
+
         SpawnMuzzle();
-    }
-    [ServerRpc]
-    void MoveTrailServerRpc(ulong trailId, Vector3 start, Vector3 end)
-    {
-        StartCoroutine(MoveTrailServer(trailId, start, end));
-    }
-    IEnumerator MoveTrailServer(ulong trailId, Vector3 start, Vector3 end)
-    {
-        TrailRenderer trail = NetworkManager.SpawnManager.SpawnedObjects[trailId].GetComponent<TrailRenderer>();
-
-        float time = 0f;
-        float duration = trail.time;
-
-        while (time < duration)
-        {
-            trail.transform.position = Vector3.Lerp(start, end, time / duration);
-            time += Time.deltaTime;
-            yield return null;
-        }
-
-        Destroy(trail.gameObject, duration);
-    }
-    void ShootLogic()
-    {
-        RaycastHit hit;
-
-        TrailRenderer trail = Instantiate(_trail);
-        Vector3 rayOrigin = _fpsCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
-        trail.transform.position = _bulletSpawnPoint.position;
-
-        if (Physics.Raycast(rayOrigin, _fpsCam.transform.forward, out hit, _weaponRange))
-        {
-            StartCoroutine(MoveTrail(trail, hit.point));
-        }
-        else
-        {
-            StartCoroutine(MoveTrail(trail, rayOrigin + (_fpsCam.transform.forward * _weaponRange)));
-        }
-        SpawnMuzzle();
+        
+        Destroy(bullet.gameObject, _bulletLiveTime * 2);
     }
     private void SpawnMuzzle()
     {
         GameObject spawnedMuzzle = Instantiate(_muzzlePrefab, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
-        spawnedMuzzle.transform.localScale = new Vector3(_scaleFactor, _scaleFactor, _scaleFactor);
+        spawnedMuzzle.GetComponent<NetworkObject>().Spawn();
+
         Destroy(spawnedMuzzle, _timeToDestroy);
-    }
-    IEnumerator MoveTrail(TrailRenderer trail, Vector3 targetPosition)
-    {
-        float time = 0f;
-        float duration = trail.time;
-
-        while (time < duration)
-        {
-            trail.transform.position = Vector3.Lerp(_bulletSpawnPoint.position, targetPosition, time / duration);
-            time += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-
-        Destroy(trail.gameObject, duration);
     }
 }

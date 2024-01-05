@@ -538,8 +538,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fireRate: 0.1
   _weaponRange: 50
+  _bullet: {fileID: 2213321236081499392, guid: a321a911ee8c5c34b9747ebf756e016b, type: 3}
+  _bulletLiveTime: 0.3
   _bulletSpawnPoint: {fileID: 957832604702750548}
-  _trail: {fileID: 2749646774521259863, guid: 373a6a3c6bd3cc442ae6fb8b071855e4, type: 3}
   _fpsCam: {fileID: 9037893689518662516}
   _muzzlePrefab: {fileID: 8800206498015667286, guid: c1a3cdc19a3aaa640913b06ea1053714, type: 3}
   _scaleFactor: 1
