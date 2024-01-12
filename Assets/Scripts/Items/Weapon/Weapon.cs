@@ -4,32 +4,27 @@ using DG.Tweening;
 
 public class Weapon : NetworkBehaviour
 {
-
     [Header("WeaponSettings")]
     [SerializeField] float _fireRate = 0.25f;
     [SerializeField] float _weaponRange = 50f;
 
     [Space(10)]
     [Header("Weapon`s Bullet")]
-
     [SerializeField] GameObject _bullet;
     [SerializeField] float _bulletLiveTime;
     [SerializeField] Transform _bulletSpawnPoint;
     [SerializeField] Camera _fpsCam;
 
-    
+    [Space(10)]
     [Header("WeaponEffects")]
-
-    
     [SerializeField] GameObject _muzzlePrefab;
-    [SerializeField] private float _scaleFactor;
     [SerializeField] private float _timeToDestroy;
 
     private float _nextFire;
 
     void Update()
     {
-        Shoot();
+        //Shoot();
     }
 
     private void Shoot()
@@ -44,6 +39,7 @@ public class Weapon : NetworkBehaviour
             }
         }
     }
+
     [ServerRpc]
     void ShootLogicServerRpc()
     {
@@ -51,7 +47,6 @@ public class Weapon : NetworkBehaviour
         RaycastHit hit;
 
         GameObject bullet = Instantiate(_bullet, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
-
         bullet.GetComponent<NetworkObject>().Spawn();
 
         if (Physics.Raycast(rayStart, _fpsCam.transform.forward, out hit, _weaponRange))
@@ -64,9 +59,9 @@ public class Weapon : NetworkBehaviour
         }
 
         SpawnMuzzle();
-        
         Destroy(bullet.gameObject, _bulletLiveTime * 2);
     }
+
     private void SpawnMuzzle()
     {
         GameObject spawnedMuzzle = Instantiate(_muzzlePrefab, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
