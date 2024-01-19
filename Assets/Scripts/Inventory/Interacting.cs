@@ -17,12 +17,43 @@ public class Interacting : MonoBehaviour
     void Update()
     {
         PickUpingAndDroping();
+
     }
+
     private void PickUpingAndDroping()
     {
         Vector3 rayStart = _camera.ScreenToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
 
+        ItemInfo(rayStart, out hit);
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (Physics.Raycast(rayStart, _camera.transform.forward, out hit, _interactDistance, _interactLayer))
+            {
+                var hitObj = hit.transform.gameObject.GetComponent<ItemObject>();
+                if (hitObj)
+                {
+                    _inventory.AddItem(hitObj.item, hitObj.count);
+
+                    Destroy(hit.transform.gameObject, 0.1f);
+                }
+            }
+            Debug.DrawRay(rayStart, _camera.transform.forward, Color.yellow);
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (Input.GetKey(KeyCode.LeftAlt))
+            {
+                _inventory.RemoveAllItem();
+                return;
+            }
+            _inventory.RemoveItem(1, false);
+        }
+    }
+
+    private void ItemInfo(Vector3 rayStart, out RaycastHit hit)
+    {
         if (Physics.Raycast(rayStart, _camera.transform.forward, out hit, _interactDistance, _interactLayer))
         {
             if (_lastInteractObj != null) _lastInteractObj.enabled = false;
@@ -35,24 +66,6 @@ public class Interacting : MonoBehaviour
         {
             _lastInteractObj.enabled = false;
             _lastInteractObj = null;
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (Physics.Raycast(rayStart, _camera.transform.forward, out hit, _interactDistance, _interactLayer))
-            {
-                if (hit.transform.gameObject.GetComponent<ItemObject>())
-                {
-                    _inventory.AddItem(hit.transform.GetComponent<ItemObject>()._item, 0, 0);
-
-                    Destroy(hit.transform.gameObject, 0.1f);
-                }
-            }
-            Debug.DrawRay(rayStart, _camera.transform.forward, Color.yellow);
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            _inventory.RemoveItem(0);
         }
     }
 }

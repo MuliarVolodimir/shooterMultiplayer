@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using DG.Tweening;
 
-public class Weapon : NetworkBehaviour
+public class Weapon : NetworkBehaviour, IItem
 {
     [Header("WeaponSettings")]
     [SerializeField] float _fireRate = 0.25f;
@@ -38,6 +38,19 @@ public class Weapon : NetworkBehaviour
                 ShootLogicServerRpc();
             }
         }
+    }
+
+    public bool Action()
+    {
+        if (Time.time >= _nextFire)
+        {
+            _nextFire = Time.time + _fireRate;
+
+            Debug.Log("I`m Shooting");
+            return true;
+            //ShootLogicServerRpc();
+        }
+        return false;
     }
 
     [ServerRpc]

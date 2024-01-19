@@ -97,7 +97,7 @@ public class FPSController : NetworkBehaviour
 
     private void Movement()
     {
-        _nowSpeed = Input.GetKey(KeyCode.LeftShift) ? _moveSpeed * 2 : _moveSpeed;
+        _nowSpeed = Input.GetKey(KeyCode.LeftShift) && _cc.isGrounded ? _moveSpeed * 1.5f : _moveSpeed;
 
         _directionVector = new Vector3(Input.GetAxis("Horizontal") * _nowSpeed, _verticalVelocity,
             Input.GetAxis("Vertical") * _nowSpeed);

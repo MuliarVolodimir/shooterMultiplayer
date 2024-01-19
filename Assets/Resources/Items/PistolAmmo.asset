@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc87aeabbf8ea6b4ba532cc642a4bf91, type: 3}
-  m_Name: Uzi
+  m_Name: PistolAmmo
   m_EditorClassIdentifier: 
-  itemName: Uzi
-  itemType: 0
-  itemPrefab: {fileID: 4435364092479253740, guid: 10e79d0d3cd7ffc4a81560353330c356, type: 3}
-  weaponType: 1
+  itemName: PistolAmmo
+  itemType: 2
+  itemPrefab: {fileID: 9012330285016044302, guid: 31833052aa41447448c306531ec340c7, type: 3}
+  weaponType: 0
   ammoType: 1
-  magazineAmmoCount: 25
+  magazineAmmoCount: 0
