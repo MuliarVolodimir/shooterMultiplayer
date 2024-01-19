@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4435364092479253740
+--- !u!1 &6067639650043033409
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,54 +8,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7376514193164326479}
-  - component: {fileID: 1633380482}
-  - component: {fileID: 1633380480}
-  - component: {fileID: 1633380481}
+  - component: {fileID: 445143268156855223}
+  - component: {fileID: 6075845458737627508}
+  - component: {fileID: 811057215492826633}
+  - component: {fileID: 3863087700699192500}
   m_Layer: 6
-  m_Name: Uzi
+  m_Name: AssaultRifleAmmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7376514193164326479
+--- !u!4 &445143268156855223
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4435364092479253740}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_GameObject: {fileID: 6067639650043033409}
+  m_LocalRotation: {x: 0.00000008146034, y: -0.00000004371139, z: 3.621977e-15, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5228583568599292095}
+  - {fileID: 7706321962876628551}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1633380482
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4435364092479253740}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.8, z: 1}
-  m_Center: {x: 0, y: -0.20000002, z: 0.14999998}
---- !u!114 &1633380480
+--- !u!114 &6075845458737627508
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4435364092479253740}
-  m_Enabled: 0
+  m_GameObject: {fileID: 6067639650043033409}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
@@ -66,20 +53,34 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!114 &1633380481
+--- !u!114 &811057215492826633
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4435364092479253740}
+  m_GameObject: {fileID: 6067639650043033409}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5717e4f7a0a44d4b98fa3669bb8f104, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _item: {fileID: 11400000, guid: 8e63232ee1ed61c4a9711cfbec4eafba, type: 2}
---- !u!1 &4883161629287399941
+  item: {fileID: 11400000, guid: b8f7bfed59c8ad2489b7146899f7cede, type: 2}
+  count: 1
+--- !u!65 &3863087700699192500
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6067639650043033409}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.4, z: 0.2}
+  m_Center: {x: 0, y: 0.19, z: 0}
+--- !u!1 &6635403461801425693
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,46 +88,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5228583568599292095}
-  - component: {fileID: 9160447643170707226}
-  - component: {fileID: 6396384503481361360}
+  - component: {fileID: 7706321962876628551}
+  - component: {fileID: 2588166451753520671}
+  - component: {fileID: 2307982934151374673}
   m_Layer: 6
-  m_Name: UziModel
+  m_Name: AssaultRifleAmmoMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5228583568599292095
+--- !u!4 &7706321962876628551
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4883161629287399941}
+  m_GameObject: {fileID: 6635403461801425693}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7376514193164326479}
+  m_Father: {fileID: 445143268156855223}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &9160447643170707226
+--- !u!33 &2588166451753520671
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4883161629287399941}
-  m_Mesh: {fileID: -5495902117074765545, guid: 2a10008cd2c12b74a954016d89cdd10e, type: 3}
---- !u!23 &6396384503481361360
+  m_GameObject: {fileID: 6635403461801425693}
+  m_Mesh: {fileID: -5495902117074765545, guid: 8b11f8cbf4f58a34aad1490ba6112ba0, type: 3}
+--- !u!23 &2307982934151374673
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4883161629287399941}
+  m_GameObject: {fileID: 6635403461801425693}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -140,7 +141,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 2a10008cd2c12b74a954016d89cdd10e, type: 3}
+  - {fileID: 2100000, guid: 67ce9aa80a037d54ea75977ac9e87bbb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

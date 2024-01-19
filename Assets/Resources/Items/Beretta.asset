@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc87aeabbf8ea6b4ba532cc642a4bf91, type: 3}
-  m_Name: Uzi
+  m_Name: Beretta
   m_EditorClassIdentifier: 
-  itemName: Uzi
+  itemName: Beretta
   itemType: 0
-  itemPrefab: {fileID: 4435364092479253740, guid: 10e79d0d3cd7ffc4a81560353330c356, type: 3}
-  weaponType: 1
-  ammoType: 1
-  magazineAmmoCount: 25
+  itemPrefab: {fileID: 268290241966291918, guid: 9ec3f51d471f6c049967b2a4491b40b5, type: 3}
+  weaponType: 4
+  ammoType: 4
+  magazineAmmoCount: 8
