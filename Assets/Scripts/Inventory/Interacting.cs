@@ -1,9 +1,10 @@
 using Unity.Burst.CompilerServices;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Interacting : MonoBehaviour 
 {
-    [SerializeField] Inventory _inventory;
+    [SerializeField] InventoryInput _inventoryInput;
     [SerializeField] Camera _camera;
     [SerializeField] float _interactDistance;
     [SerializeField] LayerMask _interactLayer;
@@ -11,7 +12,7 @@ public class Interacting : MonoBehaviour
     private Outline _lastInteractObj;
     void Start()
     {
-        _inventory = GetComponent<Inventory>();
+        _inventoryInput = GetComponent<InventoryInput>();
     }
 
     void Update()
@@ -34,7 +35,7 @@ public class Interacting : MonoBehaviour
                 var hitObj = hit.transform.gameObject.GetComponent<ItemObject>();
                 if (hitObj)
                 {
-                    _inventory.AddItem(hitObj.item, hitObj.count);
+                    _inventoryInput.AddItem(hitObj.item, hitObj.count);
 
                     Destroy(hit.transform.gameObject, 0.1f);
                 }
@@ -45,10 +46,11 @@ public class Interacting : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.LeftAlt))
             {
-                _inventory.RemoveAllItem();
+                _inventoryInput.RemoveAllItem();
+
                 return;
             }
-            _inventory.RemoveItem(1, false);
+            _inventoryInput.RemoveItem();
         }
     }
 

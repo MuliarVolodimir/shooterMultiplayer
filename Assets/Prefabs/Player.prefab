@@ -612,7 +612,7 @@ GameObject:
   - component: {fileID: 8796577934823405484}
   - component: {fileID: 285143023319364982}
   - component: {fileID: 285143023319364977}
-  - component: {fileID: 2276189858116423578}
+  - component: {fileID: 3114103601194069585}
   - component: {fileID: -6533787384511068811}
   - component: {fileID: 285143023319364976}
   - component: {fileID: -7965554035062293561}
@@ -714,7 +714,7 @@ MonoBehaviour:
   _jumpForce: 4.5
   _stepOffset: 0
   _startScale: 0
---- !u!114 &2276189858116423578
+--- !u!114 &3114103601194069585
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -723,18 +723,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2234389728570963406}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c346c1404cd7e7e44abb93f1a99e482c, type: 3}
+  m_Script: {fileID: 11500000, guid: a3b16f58918f83a4fb86b9c1450749f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _maxSlotSize: 30
-  _slots:
-  - {fileID: 3268497292911109062}
-  - {fileID: 5080351856187666140}
-  - {fileID: 2628197572376029277}
-  - {fileID: 5322854742358271931}
-  - {fileID: 2503724300690105723}
+  _slots: []
   _itemInfo: {fileID: 7634604672254189089}
-  _armPosition: {fileID: 6330333032113060495}
+  _armPosition: {fileID: 0}
   _currentEquipPrefab: {fileID: 0}
 --- !u!114 &-6533787384511068811
 MonoBehaviour:
@@ -748,7 +743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de0c44322b924884ca9b3423c29299b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inventory: {fileID: 2276189858116423578}
+  _inventoryInput: {fileID: 3114103601194069585}
   _camera: {fileID: 9037893689518662516}
   _interactDistance: 4
   _interactLayer:
