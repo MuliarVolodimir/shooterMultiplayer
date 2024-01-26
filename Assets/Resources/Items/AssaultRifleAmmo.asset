@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: AssaultRifleAmmo
   m_EditorClassIdentifier: 
   itemName: AssaultRifleAmmo
+  ItemIndex: 1
   itemType: 2
+  CanBeCompose: 1
   itemPrefab: {fileID: 6067639650043033409, guid: d605d3c2d9c2eac4c8f72d9f457d8a1b, type: 3}
   weaponType: 0
   ammoType: 2

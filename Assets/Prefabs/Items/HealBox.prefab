@@ -61,8 +61,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5717e4f7a0a44d4b98fa3669bb8f104, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 8bfabd8d0edcb8047a472fc3dca3c557, type: 2}
-  count: 1
+  Item: {fileID: 11400000, guid: 8bfabd8d0edcb8047a472fc3dca3c557, type: 2}
+  Count: 1
 --- !u!114 &7236947708518831281
 MonoBehaviour:
   m_ObjectHideFlags: 0

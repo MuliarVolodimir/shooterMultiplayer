@@ -7143,6 +7143,10 @@ PrefabInstance:
       value: HealBox
       objectReference: {fileID: 0}
     - target: {fileID: 8287067869497607693, guid: f4621489d189f824a8c3fd5742bf2149, type: 3}
+      propertyPath: Count
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8287067869497607693, guid: f4621489d189f824a8c3fd5742bf2149, type: 3}
       propertyPath: count
       value: 4
       objectReference: {fileID: 0}
@@ -7204,6 +7208,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 811057215492826633, guid: d605d3c2d9c2eac4c8f72d9f457d8a1b, type: 3}
+      propertyPath: Count
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 811057215492826633, guid: d605d3c2d9c2eac4c8f72d9f457d8a1b, type: 3}
       propertyPath: count
       value: 30
       objectReference: {fileID: 0}
@@ -7220,6 +7228,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1882489928748309269, guid: 73512d3b647052240a0568060ad984ea, type: 3}
+      propertyPath: Count
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 1882489928748309269, guid: 73512d3b647052240a0568060ad984ea, type: 3}
       propertyPath: count
       value: 12
@@ -7284,6 +7296,10 @@ PrefabInstance:
     - target: {fileID: 1512388368419328290, guid: a09030c44b9770d41b90472ab72bf5e8, type: 3}
       propertyPath: m_Name
       value: SniperAmmo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445798784608540988, guid: a09030c44b9770d41b90472ab72bf5e8, type: 3}
+      propertyPath: Count
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6445798784608540988, guid: a09030c44b9770d41b90472ab72bf5e8, type: 3}
       propertyPath: count
@@ -7385,6 +7401,10 @@ PrefabInstance:
     - target: {fileID: 7215691534939323553, guid: 31833052aa41447448c306531ec340c7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8542786263349414808, guid: 31833052aa41447448c306531ec340c7, type: 3}
+      propertyPath: Count
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8542786263349414808, guid: 31833052aa41447448c306531ec340c7, type: 3}
       propertyPath: count

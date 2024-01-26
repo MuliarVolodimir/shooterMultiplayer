@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Beretta
   m_EditorClassIdentifier: 
   itemName: Beretta
+  ItemIndex: 3
   itemType: 0
+  CanBeCompose: 0
   itemPrefab: {fileID: 268290241966291918, guid: 9ec3f51d471f6c049967b2a4491b40b5, type: 3}
   weaponType: 4
   ammoType: 4
