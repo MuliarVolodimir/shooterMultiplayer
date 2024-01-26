@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: SniperAmmo
   m_EditorClassIdentifier: 
   itemName: SniperAmmo
+  ItemIndex: 8
   itemType: 2
+  CanBeCompose: 1
   itemPrefab: {fileID: 1512388368419328290, guid: a09030c44b9770d41b90472ab72bf5e8, type: 3}
   weaponType: 0
   ammoType: 3

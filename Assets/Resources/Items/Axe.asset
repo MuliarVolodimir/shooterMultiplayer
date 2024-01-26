@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Axe
   m_EditorClassIdentifier: 
   itemName: Axe
+  ItemIndex: 2
   itemType: 0
+  CanBeCompose: 0
   itemPrefab: {fileID: 3228748396947184183, guid: d7bdd4a38f192af4aa3da1c58cc70276, type: 3}
   weaponType: 0
   ammoType: 0

@@ -35,7 +35,7 @@ public class Interacting : MonoBehaviour
                 var hitObj = hit.transform.gameObject.GetComponent<ItemObject>();
                 if (hitObj)
                 {
-                    _inventoryInput.AddItem(hitObj.item, hitObj.count);
+                    _inventoryInput.AddItem(hitObj.Item, hitObj.Count);
 
                     Destroy(hit.transform.gameObject, 0.1f);
                 }

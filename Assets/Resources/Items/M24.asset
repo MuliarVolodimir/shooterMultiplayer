@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: M24
   m_EditorClassIdentifier: 
   itemName: M24
+  ItemIndex: 5
   itemType: 0
+  CanBeCompose: 0
   itemPrefab: {fileID: 8534697608504115549, guid: a453273593942ea4eb2902c4d57f8ff9, type: 3}
   weaponType: 3
   ammoType: 3

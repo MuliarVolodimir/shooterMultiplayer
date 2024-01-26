@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Uzi
   m_EditorClassIdentifier: 
   itemName: Uzi
+  ItemIndex: 9
   itemType: 0
+  CanBeCompose: 0
   itemPrefab: {fileID: 4435364092479253740, guid: 10e79d0d3cd7ffc4a81560353330c356, type: 3}
   weaponType: 1
   ammoType: 1
