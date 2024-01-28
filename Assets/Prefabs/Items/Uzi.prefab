@@ -77,6 +77,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fireRate: 0.1
   _weaponRange: 50
+  _bulletItem: {fileID: 11400000, guid: 2f695c212a505464e96654c0e9fc17fc, type: 2}
   _bullet: {fileID: 0}
   _bulletLiveTime: 0
   _bulletSpawnPoint: {fileID: 0}

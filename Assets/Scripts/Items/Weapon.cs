@@ -10,6 +10,7 @@ public class Weapon : NetworkBehaviour, IItem
 
     [Space(10)]
     [Header("Weapon`s Bullet")]
+    [SerializeField]  Item _bulletItem;
     [SerializeField] GameObject _bullet;
     [SerializeField] float _bulletLiveTime;
     [SerializeField] Transform _bulletSpawnPoint;
@@ -18,7 +19,7 @@ public class Weapon : NetworkBehaviour, IItem
     [Space(10)]
     [Header("WeaponEffects")]
     [SerializeField] GameObject _muzzlePrefab;
-    [SerializeField] private float _timeToDestroy;
+    [SerializeField] float _timeToDestroy;
 
     private float _nextFire;
 
@@ -46,11 +47,19 @@ public class Weapon : NetworkBehaviour, IItem
         {
             _nextFire = Time.time + _fireRate;
 
-            Debug.Log("I`m Shooting");
+            Debug.Log("I`m action");
             return true;
-            //ShootLogicServerRpc();
         }
         return false;
+    }
+
+    public Item GetItemType()
+    {
+        if (_bulletItem == null)
+        {
+            return null;
+        }
+        return _bulletItem;
     }
 
     [ServerRpc]

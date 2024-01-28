@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InventoryInput : MonoBehaviour
 {
@@ -11,6 +10,7 @@ public class InventoryInput : MonoBehaviour
     [SerializeField] GameObject _armPosition;
     [SerializeField] GameObject _currentEquipPrefab;
 
+    private const int MAX_SLOTS_COUNT = 5;
     private int _currentSelectedSlot = 0;
     private List<Slot> _inventory;
 
@@ -24,7 +24,50 @@ public class InventoryInput : MonoBehaviour
     private void Update()
     {
         SlotsNavigation();
+        UsingItem();
         InventoryDebugCheck();
+    }
+
+    private void UsingItem()
+    {
+        if (Input.GetButton("Fire1"))
+        {
+            if (_currentEquipPrefab != null)
+            {
+                // for Weapon
+                if (_currentEquipPrefab.GetComponent<Weapon>())
+                {
+                    var weapon = _currentEquipPrefab.GetComponent<Weapon>();
+                    if (weapon.GetItemType() != null)
+                    {
+                        Item item = weapon.GetItemType();
+                        if (InventorySingletone.Instance.FindExistingItemSlotIndex(item) != -1)
+                        {
+                            bool isAction = weapon.Action();
+                            if (isAction)
+                            {
+                                InventorySingletone.Instance.RemoveItem(1, InventorySingletone.Instance.FindExistingItemSlotIndex(item));
+                            }
+                            UpdateGraphic(item, _inventory[InventorySingletone.Instance.FindExistingItemSlotIndex(item)].ItemCount, InventorySingletone.Instance.FindExistingItemSlotIndex(item), true);
+                        }
+                    }     
+                }
+                // for Healing Item
+                if (_currentEquipPrefab.GetComponent<HealingItem>())
+                {
+                    var healingItem = _currentEquipPrefab.GetComponent<HealingItem>();
+                    Item item = _currentEquipPrefab.GetComponent<ItemObject>().Item;
+
+                    bool isAction = healingItem.Action();
+                    if (isAction)
+                    {
+                        InventorySingletone.Instance.RemoveItem(1, InventorySingletone.Instance.FindExistingItemSlotIndex(item));
+                    }
+                    _slots[InventorySingletone.Instance.FindExistingItemSlotIndex(item)].UpdateSlotView(item, _inventory[InventorySingletone.Instance.FindExistingItemSlotIndex(item)].ItemCount);
+                    SwitchSlot(_currentSelectedSlot);
+                }
+            }
+        }
     }
 
     private void InventoryDebugCheck()
@@ -71,7 +114,7 @@ public class InventoryInput : MonoBehaviour
 
     private void SlotsNavigation()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < MAX_SLOTS_COUNT; i++)
         {
             KeyCode key = KeyCode.Alpha1 + i;
             if (Input.GetKeyDown(key))
@@ -83,8 +126,8 @@ public class InventoryInput : MonoBehaviour
 
         float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
 
-        if (scrollWheel < 0f) SwitchSlot((_currentSelectedSlot + 1) % 5);
-        else if (scrollWheel > 0f) SwitchSlot((_currentSelectedSlot - 1 + 5) % 5);
+        if (scrollWheel < 0f) SwitchSlot((_currentSelectedSlot + 1) % MAX_SLOTS_COUNT);
+        else if (scrollWheel > 0f) SwitchSlot((_currentSelectedSlot - 1 + MAX_SLOTS_COUNT) % MAX_SLOTS_COUNT);
     }
 
     private void SwitchSlot(int slotIndex)
@@ -94,23 +137,26 @@ public class InventoryInput : MonoBehaviour
         _currentSelectedSlot = slotIndex;
         _slots[_currentSelectedSlot].SwitchSelected(true);
 
-        UpdateGraphic(_inventory[slotIndex].Item, _inventory[slotIndex].ItemCount, slotIndex);
+        UpdateGraphic(_inventory[slotIndex].Item, _inventory[slotIndex].ItemCount, slotIndex, false);
     }
 
-    private void UpdateGraphic(Item item, int itemCount, int slotIndex)
+    private void UpdateGraphic(Item item, int itemCount, int slotIndex, bool isUsing)
     {
         if (item != null)
         {
-            if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
-
-            _currentEquipPrefab = Instantiate(item.itemPrefab, _armPosition.transform);
+            if (!isUsing)
+            {
+                if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
+                _currentEquipPrefab = Instantiate(item.itemPrefab, _armPosition.transform);
+            }
 
             _slots[slotIndex].UpdateSlotView(item, itemCount);
             _currentItemInfo.text = $"{item.itemName}:{itemCount}";
         }
         else
         {
-            if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
+            if (!isUsing)
+                if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
 
             _slots[slotIndex].UpdateSlotView(item, itemCount);
             _currentItemInfo.text = $"Slot {_currentSelectedSlot + 1} empty";    

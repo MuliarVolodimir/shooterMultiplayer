@@ -4,13 +4,13 @@ public class InventorySingletone
 {
     private static InventorySingletone _instance;
 
-    private const int _maxSlotCount = 5;
+    private const int MAX_SLOTS_COUNT = 5;
     private List<Slot> _slots = new List<Slot>();
     private int _currentSlot = 0;
 
     InventorySingletone()
     {
-        for (int i = 0; i < _maxSlotCount; i++)
+        for (int i = 0; i < MAX_SLOTS_COUNT; i++)
         {
             _slots.Add(new Slot());
         }
@@ -77,13 +77,13 @@ public class InventorySingletone
         }
     }
 
-    private int FindExistingItemSlotIndex(Item item)
+    public int FindExistingItemSlotIndex(Item item)
     {
         for (int i = 0; i < _slots.Count; i++)
         {
             if (_slots[i].Item != null 
                 && _slots[i].Item.ItemIndex == item.ItemIndex 
-                && item.CanBeCompose)
+                && item.isStackable)
             {
                 return i;
             }

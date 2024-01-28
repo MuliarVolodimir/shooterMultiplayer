@@ -14,9 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: HealBox
   ItemIndex: 4
-  itemType: 1
-  CanBeCompose: 1
+  isStackable: 1
   itemPrefab: {fileID: 8287067869497607692, guid: f4621489d189f824a8c3fd5742bf2149, type: 3}
-  weaponType: 0
-  ammoType: 0
-  magazineAmmoCount: 0

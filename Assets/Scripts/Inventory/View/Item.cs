@@ -6,6 +6,6 @@ public class Item : ScriptableObject
 {
     public string itemName;
     public int ItemIndex;
-    public bool CanBeCompose;
+    public bool isStackable;
     public GameObject itemPrefab; 
 }
