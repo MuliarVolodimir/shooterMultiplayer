@@ -1,6 +1,4 @@
-using Unity.Burst.CompilerServices;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class Interacting : MonoBehaviour 
 {
