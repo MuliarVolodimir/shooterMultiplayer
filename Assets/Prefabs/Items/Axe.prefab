@@ -94,8 +94,8 @@ GameObject:
   - component: {fileID: 3228748396947184171}
   - component: {fileID: 3228748396947184180}
   - component: {fileID: 3228748396947184182}
-  - component: {fileID: 6957429306026646349}
   - component: {fileID: 5097901520269018200}
+  - component: {fileID: -7951526610088308527}
   m_Layer: 6
   m_Name: Axe
   m_TagString: Untagged
@@ -146,26 +146,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Item: {fileID: 11400000, guid: ab78027188928e34e93cd37987846eb4, type: 2}
   Count: 1
---- !u!114 &6957429306026646349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3228748396947184183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40e01263a4702ff4f95124ab3fbb9572, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _fireRate: 2.5
-  _weaponRange: 50
-  _bullet: {fileID: 0}
-  _bulletLiveTime: 0
-  _bulletSpawnPoint: {fileID: 0}
-  _fpsCam: {fileID: 0}
-  _muzzlePrefab: {fileID: 0}
-  _timeToDestroy: 0
 --- !u!114 &5097901520269018200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,3 +164,21 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &-7951526610088308527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228748396947184183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61a6639311af7da4e8352178651f5c2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fireRate: 2
+  _weaponRange: 1
+  _damage: 30
+  _fpsCam: {fileID: 0}
+  _muzzlePrefab: {fileID: 0}
+  _timeToDestroy: 0

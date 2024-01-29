@@ -2,15 +2,16 @@ using Unity.Netcode;
 using UnityEngine;
 using DG.Tweening;
 
-public class Weapon : NetworkBehaviour, IItem
+public class FireArmWeapon : NetworkBehaviour, IItem
 {
     [Header("WeaponSettings")]
     [SerializeField] float _fireRate = 0.25f;
     [SerializeField] float _weaponRange = 50f;
+    [SerializeField] int _damage;
 
     [Space(10)]
     [Header("Weapon`s Bullet")]
-    [SerializeField]  Item _bulletItem;
+    [SerializeField] Item _bulletItem;
     [SerializeField] GameObject _bullet;
     [SerializeField] float _bulletLiveTime;
     [SerializeField] Transform _bulletSpawnPoint;
@@ -23,37 +24,30 @@ public class Weapon : NetworkBehaviour, IItem
 
     private float _nextFire;
 
-    void Update()
-    {
-        //Shoot();
-    }
-
-    private void Shoot()
-    {
-        if (Time.time >= _nextFire)
-        {
-            _nextFire = Time.time + _fireRate;
-
-            if (Input.GetButton("Fire1"))
-            {
-                ShootLogicServerRpc();
-            }
-        }
-    }
-
     public bool Action()
     {
         if (Time.time >= _nextFire)
         {
             _nextFire = Time.time + _fireRate;
+            TestShoot();
 
-            Debug.Log("I`m action");
             return true;
         }
         return false;
     }
 
-    public Item GetItemType()
+    private void TestShoot()
+    {
+        Vector3 rayStart = _fpsCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        RaycastHit hit;
+
+        if (Physics.Raycast(rayStart, _fpsCam.transform.forward, out hit, _weaponRange))
+        {
+            Debug.Log(hit.transform.gameObject.name);
+        }
+    }
+
+    public Item GetBulletType()
     {
         if (_bulletItem == null)
         {

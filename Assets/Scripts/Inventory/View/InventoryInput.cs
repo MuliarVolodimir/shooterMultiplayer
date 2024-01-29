@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class InventoryInput : MonoBehaviour
 {
@@ -34,37 +35,51 @@ public class InventoryInput : MonoBehaviour
         {
             if (_currentEquipPrefab != null)
             {
-                // for Weapon
-                if (_currentEquipPrefab.GetComponent<Weapon>())
+                //for Melee Weapon / Зброя ближнього бою
+                if (_currentEquipPrefab.GetComponent<MeleeWeapon>())
                 {
-                    var weapon = _currentEquipPrefab.GetComponent<Weapon>();
-                    if (weapon.GetItemType() != null)
+                    var meleeWeapon = _currentEquipPrefab.GetComponent<MeleeWeapon>();
+                    meleeWeapon.Action();
+                    return;
+                }
+                // for FireArm Weapon / Вогнепальна зброя
+                if (_currentEquipPrefab.GetComponent<FireArmWeapon>())
+                {
+                    var weapon = _currentEquipPrefab.GetComponent<FireArmWeapon>();
+                    if (weapon.GetBulletType() != null)
                     {
-                        Item item = weapon.GetItemType();
-                        if (InventorySingletone.Instance.FindExistingItemSlotIndex(item) != -1)
+                        Item item = weapon.GetBulletType();
+                        int existingItemIndex = InventorySingletone.Instance.FindExistingItemSlotIndex(item);
+
+                        if (existingItemIndex != -1)
                         {
                             bool isAction = weapon.Action();
                             if (isAction)
                             {
-                                InventorySingletone.Instance.RemoveItem(1, InventorySingletone.Instance.FindExistingItemSlotIndex(item));
+                                InventorySingletone.Instance.RemoveItem(1, existingItemIndex);
                             }
-                            UpdateGraphic(item, _inventory[InventorySingletone.Instance.FindExistingItemSlotIndex(item)].ItemCount, InventorySingletone.Instance.FindExistingItemSlotIndex(item), true);
+                            if (InventorySingletone.Instance.FindExistingItemSlotIndex(item) == -1)
+                            {
+                                UpdateSlotView(null, _inventory[existingItemIndex].ItemCount, existingItemIndex);
+                                return;
+                            }
+                            UpdateSlotView(item, _inventory[existingItemIndex].ItemCount, existingItemIndex);
+                            return;
                         }
-                    }     
+                    }
                 }
-                // for Healing Item
+                // for Healing Item / Лікувальні предмети
                 if (_currentEquipPrefab.GetComponent<HealingItem>())
                 {
                     var healingItem = _currentEquipPrefab.GetComponent<HealingItem>();
-                    Item item = _currentEquipPrefab.GetComponent<ItemObject>().Item;
-
                     bool isAction = healingItem.Action();
+
                     if (isAction)
                     {
-                        InventorySingletone.Instance.RemoveItem(1, InventorySingletone.Instance.FindExistingItemSlotIndex(item));
+                        InventorySingletone.Instance.RemoveItem(1, _currentSelectedSlot);
+                        UpdateSlotView(_inventory[_currentSelectedSlot].Item, _inventory[_currentSelectedSlot].ItemCount, _currentSelectedSlot);
                     }
-                    _slots[InventorySingletone.Instance.FindExistingItemSlotIndex(item)].UpdateSlotView(item, _inventory[InventorySingletone.Instance.FindExistingItemSlotIndex(item)].ItemCount);
-                    SwitchSlot(_currentSelectedSlot);
+                    return;
                 }
             }
         }
@@ -80,12 +95,15 @@ public class InventoryInput : MonoBehaviour
 
     public void AddItem(Item item, int itemCount)
     {
-        if (InventorySingletone.Instance.FindFreeSlotIndex() == -1)
+        int freeSlotIndex = InventorySingletone.Instance.FindFreeSlotIndex();
+
+        if (freeSlotIndex == -1)
         {
             RemoveAllItem();
         }
 
         InventorySingletone.Instance.AddItem(item, itemCount, _currentSelectedSlot);
+        UpdateSlotView(_inventory[freeSlotIndex].Item, _inventory[freeSlotIndex].ItemCount, freeSlotIndex);
         SwitchSlot(_currentSelectedSlot);
     }
 
@@ -133,31 +151,29 @@ public class InventoryInput : MonoBehaviour
     private void SwitchSlot(int slotIndex)
     {
         _slots[_currentSelectedSlot].SwitchSelected(false);
+        if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
 
         _currentSelectedSlot = slotIndex;
         _slots[_currentSelectedSlot].SwitchSelected(true);
 
-        UpdateGraphic(_inventory[slotIndex].Item, _inventory[slotIndex].ItemCount, slotIndex, false);
+        if (_inventory[slotIndex].Item != null)
+        {
+            if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
+            _currentEquipPrefab = Instantiate(_inventory[_currentSelectedSlot].Item.itemPrefab, _armPosition.transform);
+        }
+
+        UpdateSlotView(_inventory[slotIndex].Item, _inventory[slotIndex].ItemCount, slotIndex);
     }
 
-    private void UpdateGraphic(Item item, int itemCount, int slotIndex, bool isUsing)
+    private void UpdateSlotView(Item item, int itemCount, int slotIndex)
     {
         if (item != null)
         {
-            if (!isUsing)
-            {
-                if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
-                _currentEquipPrefab = Instantiate(item.itemPrefab, _armPosition.transform);
-            }
-
             _slots[slotIndex].UpdateSlotView(item, itemCount);
             _currentItemInfo.text = $"{item.itemName}:{itemCount}";
         }
         else
         {
-            if (!isUsing)
-                if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
-
             _slots[slotIndex].UpdateSlotView(item, itemCount);
             _currentItemInfo.text = $"Slot {_currentSelectedSlot + 1} empty";    
         }  

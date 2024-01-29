@@ -8,6 +8,7 @@ public class Interacting : MonoBehaviour
     [SerializeField] LayerMask _interactLayer;
 
     private Outline _lastInteractObj;
+
     void Start()
     {
         _inventoryInput = GetComponent<InventoryInput>();
@@ -16,7 +17,6 @@ public class Interacting : MonoBehaviour
     void Update()
     {
         PickUpingAndDroping();
-
     }
 
     private void PickUpingAndDroping()

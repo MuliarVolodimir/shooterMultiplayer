@@ -158,8 +158,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40e01263a4702ff4f95124ab3fbb9572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fireRate: 0.6
+  _fireRate: 0.1
   _weaponRange: 50
+  _damage: 20
   _bulletItem: {fileID: 11400000, guid: b8f7bfed59c8ad2489b7146899f7cede, type: 2}
   _bullet: {fileID: 0}
   _bulletLiveTime: 0
