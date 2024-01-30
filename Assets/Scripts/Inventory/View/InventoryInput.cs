@@ -38,56 +38,69 @@ public class InventoryInput : MonoBehaviour
                 //for Melee Weapon / Зброя ближнього бою
                 if (_currentEquipPrefab.GetComponent<MeleeWeapon>())
                 {
-                    var meleeWeapon = _currentEquipPrefab.GetComponent<MeleeWeapon>();
-                    meleeWeapon.Action();
+                    MeleeWeaponAction();
                     return;
                 }
                 // for FireArm Weapon / Вогнепальна зброя
                 if (_currentEquipPrefab.GetComponent<FireArmWeapon>())
                 {
-                    var weapon = _currentEquipPrefab.GetComponent<FireArmWeapon>();
-                    if (weapon.GetBulletType() != null)
-                    {
-                        Item bullet = weapon.GetBulletType();
-                        int existingItemIndex = InventorySingletone.Instance.FindExistingItemSlotIndex(bullet);
-
-                        if (existingItemIndex != -1)
-                        {
-                            bool isAction = weapon.Action();
-                            if (isAction)
-                            {
-                                InventorySingletone.Instance.RemoveItem(1, existingItemIndex);
-                            }
-                            if (InventorySingletone.Instance.FindExistingItemSlotIndex(bullet) == -1)
-                            {
-                                UpdateSlotView(null, _inventory[existingItemIndex].ItemCount, existingItemIndex);
-                                return;
-                            }
-                            UpdateSlotView(bullet, _inventory[existingItemIndex].ItemCount, existingItemIndex);
-                            return;
-                        }
-                    }
+                    FireArmWeaponAction();
+                    return;
                 }
                 // for Healing Item / Лікувальні предмети
                 if (_currentEquipPrefab.GetComponent<HealingItem>())
                 {
-                    var healingItem = _currentEquipPrefab.GetComponent<HealingItem>();
-                    bool isAction = healingItem.Action();
-
-                    if (isAction)
-                    {
-                        InventorySingletone.Instance.RemoveItem(1, _currentSelectedSlot);
-                        if (_inventory[_currentSelectedSlot].Item == null)
-                        {
-                            SwitchSlot(_currentSelectedSlot);
-                            return;
-                        }
-                        UpdateSlotView(_inventory[_currentSelectedSlot].Item, _inventory[_currentSelectedSlot].ItemCount, _currentSelectedSlot);
-                    }
+                    HealingItemAction();
                     return;
                 }
             }
         }
+    }
+
+    private void MeleeWeaponAction()
+    {
+        var meleeWeapon = _currentEquipPrefab.GetComponent<MeleeWeapon>();
+        meleeWeapon.Action();
+        return;
+    }
+
+    private void HealingItemAction()
+    {
+        var healingItem = _currentEquipPrefab.GetComponent<HealingItem>();
+        bool isAction = healingItem.Action();
+
+        if (isAction)
+        {
+            InventorySingletone.Instance.RemoveItem(1, _currentSelectedSlot);
+            if (_inventory[_currentSelectedSlot].Item == null)
+            {
+                SwitchSlot(_currentSelectedSlot);
+                return;
+            }
+            UpdateSlotView(_inventory[_currentSelectedSlot].Item, _inventory[_currentSelectedSlot].ItemCount, _currentSelectedSlot);
+        }
+        return;
+    }
+
+    private void FireArmWeaponAction()
+    {
+        var weapon = _currentEquipPrefab.GetComponent<FireArmWeapon>();
+        Item bullet = weapon.GetBulletType();
+        int existingItemIndex = InventorySingletone.Instance.FindExistingItemSlotIndex(bullet);
+
+        if (existingItemIndex != -1)
+        {
+            bool isAction = weapon.Action();
+            if (isAction)
+            {
+                InventorySingletone.Instance.RemoveItem(1, existingItemIndex);
+            }
+
+            UpdateSlotView(InventorySingletone.Instance.FindExistingItemSlotIndex(bullet) != -1 ? bullet : null
+                , _inventory[existingItemIndex].ItemCount
+                , existingItemIndex);
+        }
+        return;
     }
 
     private void InventoryDebugCheck()
@@ -180,7 +193,7 @@ public class InventoryInput : MonoBehaviour
         else
         {
             _slots[slotIndex].UpdateSlotView(item, itemCount);
-            _currentItemInfo.text = $"Slot {_currentSelectedSlot + 1} empty";    
-        }  
+            _currentItemInfo.text = $"Slot {_currentSelectedSlot + 1} empty";
+        }
     }
 }
