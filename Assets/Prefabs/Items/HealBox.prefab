@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _healAmount: 10
-  _useRate: 5
+  _useRate: 1
 --- !u!1 &9205636380331617290
 GameObject:
   m_ObjectHideFlags: 0

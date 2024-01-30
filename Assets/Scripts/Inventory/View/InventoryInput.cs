@@ -48,8 +48,8 @@ public class InventoryInput : MonoBehaviour
                     var weapon = _currentEquipPrefab.GetComponent<FireArmWeapon>();
                     if (weapon.GetBulletType() != null)
                     {
-                        Item item = weapon.GetBulletType();
-                        int existingItemIndex = InventorySingletone.Instance.FindExistingItemSlotIndex(item);
+                        Item bullet = weapon.GetBulletType();
+                        int existingItemIndex = InventorySingletone.Instance.FindExistingItemSlotIndex(bullet);
 
                         if (existingItemIndex != -1)
                         {
@@ -58,12 +58,12 @@ public class InventoryInput : MonoBehaviour
                             {
                                 InventorySingletone.Instance.RemoveItem(1, existingItemIndex);
                             }
-                            if (InventorySingletone.Instance.FindExistingItemSlotIndex(item) == -1)
+                            if (InventorySingletone.Instance.FindExistingItemSlotIndex(bullet) == -1)
                             {
                                 UpdateSlotView(null, _inventory[existingItemIndex].ItemCount, existingItemIndex);
                                 return;
                             }
-                            UpdateSlotView(item, _inventory[existingItemIndex].ItemCount, existingItemIndex);
+                            UpdateSlotView(bullet, _inventory[existingItemIndex].ItemCount, existingItemIndex);
                             return;
                         }
                     }
@@ -77,6 +77,11 @@ public class InventoryInput : MonoBehaviour
                     if (isAction)
                     {
                         InventorySingletone.Instance.RemoveItem(1, _currentSelectedSlot);
+                        if (_inventory[_currentSelectedSlot].Item == null)
+                        {
+                            SwitchSlot(_currentSelectedSlot);
+                            return;
+                        }
                         UpdateSlotView(_inventory[_currentSelectedSlot].Item, _inventory[_currentSelectedSlot].ItemCount, _currentSelectedSlot);
                     }
                     return;
