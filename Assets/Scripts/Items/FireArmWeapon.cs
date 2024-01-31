@@ -48,6 +48,11 @@ public class FireArmWeapon : NetworkBehaviour, IItem
 
         if (Physics.Raycast(rayStart, _fpsCam.transform.forward, out hit, _weaponRange))
         {
+            if (hit.transform.GetComponent<Character>())
+            {
+                var character = hit.transform.GetComponent<Character>();
+                character.Takedamage(_damage);
+            }
             Debug.Log(hit.transform.gameObject.name);
         }
     }

@@ -3997,7 +3997,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 2106930081}
+  m_Mesh: {fileID: 1550359544}
 --- !u!33 &1568511306
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -7309,6 +7309,7 @@ GameObject:
   - component: {fileID: 8470149603426611011}
   - component: {fileID: 5938263813608987529}
   - component: {fileID: 8470149603426611012}
+  - component: {fileID: 8470149603426611013}
   m_Layer: 0
   m_Name: TestBot
   m_TagString: Untagged
@@ -7379,3 +7380,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.7, y: 2.4, z: 0.6}
   m_Center: {x: 0, y: 1.2, z: 0.15}
+--- !u!114 &8470149603426611013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5289494297401883228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c89195a82cc6b840b5336c013f9385e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 100
