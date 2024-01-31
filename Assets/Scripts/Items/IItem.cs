@@ -1,4 +1,4 @@
 ﻿internal interface IItem
 {
-    bool Action();
+    void Action();
 }

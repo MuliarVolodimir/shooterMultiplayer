@@ -12,7 +12,7 @@ public class FireArmWeapon : NetworkBehaviour, IItem
     [Space(10)]
     [Header("Weapon`s Bullet")]
     [SerializeField] Item _bulletItem;
-    [SerializeField] GameObject _bullet;
+    [SerializeField] GameObject _bulletPrefab;
     [SerializeField] float _bulletLiveTime;
     [SerializeField] Transform _bulletSpawnPoint;
     [SerializeField] Camera _fpsCam;
@@ -24,16 +24,21 @@ public class FireArmWeapon : NetworkBehaviour, IItem
 
     private float _nextFire;
 
-    public bool Action()
+    public void Action()
     {
         if (Time.time >= _nextFire)
         {
             _nextFire = Time.time + _fireRate;
-            TestShoot();
-
-            return true;
+            if (InventorySingletone.Instance.FindExistingItemSlotIndex(_bulletItem) != -1)
+            {
+                InventorySingletone.Instance.RemoveItem(_bulletItem, 1, true);
+                TestShoot();
+            } 
+            else
+            {
+                Debug.Log("No Ammo");
+            }
         }
-        return false;
     }
 
     private void TestShoot()
@@ -62,7 +67,7 @@ public class FireArmWeapon : NetworkBehaviour, IItem
         Vector3 rayStart = _fpsCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
 
-        GameObject bullet = Instantiate(_bullet, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
+        GameObject bullet = Instantiate(_bulletPrefab, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
         bullet.GetComponent<NetworkObject>().Spawn();
 
         if (Physics.Raycast(rayStart, _fpsCam.transform.forward, out hit, _weaponRange))

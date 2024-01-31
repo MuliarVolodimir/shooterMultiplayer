@@ -7,7 +7,6 @@ public class MeleeWeapon : NetworkBehaviour, IItem
     [SerializeField] float _fireRate = 2;
     [SerializeField] float _weaponRange = 1f;
     [SerializeField] int _damage;
-
     [SerializeField] Camera _fpsCam;
 
     [Space(10)]
@@ -17,16 +16,13 @@ public class MeleeWeapon : NetworkBehaviour, IItem
 
     private float _nextFire;
 
-    public bool Action()
+    public void Action()
     {
         if (Time.time >= _nextFire)
         {
             _nextFire = Time.time + _fireRate;
             Attack();
-
-            return true;
         }
-        return false;
     }
 
     private void Attack()

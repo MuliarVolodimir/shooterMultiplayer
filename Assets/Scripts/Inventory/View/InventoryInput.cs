@@ -1,19 +1,54 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class InventoryInput : MonoBehaviour
 {
     [SerializeField] List<SlotView> _slots;
     [SerializeField] TextMeshProUGUI _currentItemInfo;
-
     [SerializeField] GameObject _armPosition;
     [SerializeField] GameObject _currentEquipPrefab;
 
     private const int MAX_SLOTS_COUNT = 5;
     private int _currentSelectedSlot = 0;
     private List<Slot> _inventory;
+    private Item _currentSelectedItem;
+
+    private void Awake()
+    {
+        InventorySingletone.Instance.OnItemRemoved += OnitemRemoved;
+        InventorySingletone.Instance.OnItemAdded += OnItemAdded;
+        InventorySingletone.Instance.OnItemSwitched += OnItemSwitched;
+    }
+
+    private void OnItemAdded(Item item, int itemCount, int slotIndex)
+    {
+        UpdateSlotView(item, itemCount, slotIndex);
+
+        Debug.Log($"+ {itemCount} {item.itemName}");
+    }
+
+    private void OnitemRemoved(Item item, int currentItemCount ,int removedItemCount, int slotIndex, bool isUsed)
+    {
+        UpdateSlotView(item, currentItemCount, slotIndex);
+
+        if (item != null)
+        {
+            if (!isUsed)
+            {
+                GameObject gameObject = Instantiate(item.itemPrefab, transform.position, transform.rotation);
+                gameObject.GetComponent<ItemObject>().Count = removedItemCount;
+            }
+
+            Debug.Log($"- {removedItemCount} {item.itemName} {item}");
+        }
+    }
+
+    private void OnItemSwitched(Item oldItem, Item newItem, int oldItemCount, int newItemCount, int slotIndex)
+    {
+        UpdateSlotView(newItem, newItemCount, slotIndex);
+        Debug.Log($"{oldItemCount} {oldItem} ~ {newItemCount} {newItem}");
+    }
 
     private void Start()
     {
@@ -61,46 +96,18 @@ public class InventoryInput : MonoBehaviour
     {
         var meleeWeapon = _currentEquipPrefab.GetComponent<MeleeWeapon>();
         meleeWeapon.Action();
-        return;
     }
 
     private void HealingItemAction()
     {
         var healingItem = _currentEquipPrefab.GetComponent<HealingItem>();
-        bool isAction = healingItem.Action();
-
-        if (isAction)
-        {
-            InventorySingletone.Instance.RemoveItem(1, _currentSelectedSlot);
-            if (_inventory[_currentSelectedSlot].Item == null)
-            {
-                SwitchSlot(_currentSelectedSlot);
-                return;
-            }
-            UpdateSlotView(_inventory[_currentSelectedSlot].Item, _inventory[_currentSelectedSlot].ItemCount, _currentSelectedSlot);
-        }
-        return;
+        healingItem.Action();
     }
 
     private void FireArmWeaponAction()
     {
         var weapon = _currentEquipPrefab.GetComponent<FireArmWeapon>();
-        Item bullet = weapon.GetBulletType();
-        int existingItemIndex = InventorySingletone.Instance.FindExistingItemSlotIndex(bullet);
-
-        if (existingItemIndex != -1)
-        {
-            bool isAction = weapon.Action();
-            if (isAction)
-            {
-                InventorySingletone.Instance.RemoveItem(1, existingItemIndex);
-            }
-
-            UpdateSlotView(InventorySingletone.Instance.FindExistingItemSlotIndex(bullet) != -1 ? bullet : null
-                , _inventory[existingItemIndex].ItemCount
-                , existingItemIndex);
-        }
-        return;
+        weapon.Action();
     }
 
     private void InventoryDebugCheck()
@@ -113,38 +120,21 @@ public class InventoryInput : MonoBehaviour
 
     public void AddItem(Item item, int itemCount)
     {
-        int freeSlotIndex = InventorySingletone.Instance.FindFreeSlotIndex();
-
-        if (freeSlotIndex == -1)
-        {
-            RemoveAllItem();
-        }
-
         InventorySingletone.Instance.AddItem(item, itemCount, _currentSelectedSlot);
-        UpdateSlotView(_inventory[freeSlotIndex].Item, _inventory[freeSlotIndex].ItemCount, freeSlotIndex);
+
         SwitchSlot(_currentSelectedSlot);
     }
 
     public void RemoveAllItem()
     {
-        if (_currentEquipPrefab != null)
-        {
-            GameObject gameObject = Instantiate(_inventory[_currentSelectedSlot].Item.itemPrefab, transform.position, transform.rotation);
-            gameObject.GetComponent<ItemObject>().Count = _inventory[_currentSelectedSlot].ItemCount;
-        }
-
         InventorySingletone.Instance.RemoveAllItem(_currentSelectedSlot);
         SwitchSlot(_currentSelectedSlot);
     }
 
     public void RemoveItem()
     {
-        if (_inventory[_currentSelectedSlot].Item != null)
-        {
-            Instantiate(_inventory[_currentSelectedSlot].Item.itemPrefab, transform.position, transform.rotation);
-        }
+        InventorySingletone.Instance.RemoveItem(_currentSelectedItem, 1, false);
 
-        InventorySingletone.Instance.RemoveItem(1, _currentSelectedSlot);
         SwitchSlot(_currentSelectedSlot);
     }
 
@@ -176,6 +166,7 @@ public class InventoryInput : MonoBehaviour
 
         if (_inventory[slotIndex].Item != null)
         {
+            _currentSelectedItem = _inventory[slotIndex].Item;
             if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
             _currentEquipPrefab = Instantiate(_inventory[_currentSelectedSlot].Item.itemPrefab, _armPosition.transform);
         }
@@ -188,12 +179,12 @@ public class InventoryInput : MonoBehaviour
         if (item != null)
         {
             _slots[slotIndex].UpdateSlotView(item, itemCount);
-            _currentItemInfo.text = $"{item.itemName}:{itemCount}";
+            _currentItemInfo.text = $"{itemCount}";
         }
         else
         {
             _slots[slotIndex].UpdateSlotView(item, itemCount);
-            _currentItemInfo.text = $"Slot {_currentSelectedSlot + 1} empty";
+            _currentItemInfo.text = $"--";
         }
     }
 }
