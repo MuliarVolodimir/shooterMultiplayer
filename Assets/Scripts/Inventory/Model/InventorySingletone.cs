@@ -1,16 +1,23 @@
+using System;
 using System.Collections.Generic;
 
 public class InventorySingletone 
 {
     private static InventorySingletone _instance;
 
-    private const int _maxSlotCount = 5;
+    private const int MAX_SLOTS_COUNT = 5;
     private List<Slot> _slots = new List<Slot>();
     private int _currentSlot = 0;
+    //private int _currentSelectedSlot = 0;
+
+    //Actions :)
+    public event Action<Item, int, int, int, bool> OnItemRemoved; // Remove // item, currentItemCount, removedItemCount, slotIndex
+    public event Action<Item, int, int> OnItemAdded; // Add // item, itemCount, slotIndex
+    public event Action<Item, Item, int, int, int> OnItemSwitched; // Switch // itemOld, itemNew, oldItemCount, newItemCount, slotIndex
 
     InventorySingletone()
     {
-        for (int i = 0; i < _maxSlotCount; i++)
+        for (int i = 0; i < MAX_SLOTS_COUNT; i++)
         {
             _slots.Add(new Slot());
         }
@@ -57,6 +64,7 @@ public class InventorySingletone
 
         if (existingSlotIndex != -1)
         {
+            _currentSlot = existingSlotIndex;
             _slots[existingSlotIndex].ItemCount += itemCount;
         }
         else
@@ -75,15 +83,17 @@ public class InventorySingletone
                 SwitchItem(_currentSlot, item, itemCount);
             }
         }
+        OnItemAdded?.Invoke(_slots[_currentSlot].Item, _slots[_currentSlot].ItemCount, _currentSlot);
+
     }
 
-    private int FindExistingItemSlotIndex(Item item)
+    public int FindExistingItemSlotIndex(Item item)
     {
         for (int i = 0; i < _slots.Count; i++)
         {
             if (_slots[i].Item != null 
                 && _slots[i].Item.ItemIndex == item.ItemIndex 
-                && item.CanBeCompose)
+                && item.isStackable)
             {
                 return i;
             }
@@ -108,8 +118,9 @@ public class InventorySingletone
     {
         if (_slots[_currentSlot].Item != null)
         {
-            RemoveItem(_slots[_currentSlot].ItemCount, _currentSlot);
+            OnItemSwitched?.Invoke(_slots[slotIndex].Item, item, _slots[slotIndex].ItemCount, itemCount, slotIndex);
 
+            RemoveAllItem(_currentSlot);
             _slots[slotIndex].Item = item;
             _slots[slotIndex].ItemCount = itemCount;
         }
@@ -117,14 +128,17 @@ public class InventorySingletone
 
     public void RemoveAllItem(int slotIndex)
     {
-        RemoveItem(_slots[slotIndex].ItemCount, slotIndex);
+        RemoveItem(_slots[slotIndex].Item, _slots[slotIndex].ItemCount, false);
     }
 
-    public void RemoveItem(int itemCount, int slotIndex)
+    public void RemoveItem(Item item, int removedItemCount, bool isUsed)
     {
-        if (_slots[slotIndex].Item != null)
+        int slotIndex = FindItemToRemove(item);
+
+        if (slotIndex != -1)
         {
-            _slots[slotIndex].ItemCount -= itemCount;
+            _slots[slotIndex].ItemCount -= removedItemCount;
+            OnItemRemoved?.Invoke(_slots[slotIndex].Item, _slots[slotIndex].ItemCount, removedItemCount, slotIndex, isUsed);
 
             if (_slots[slotIndex].ItemCount < 1)
             {
@@ -132,5 +146,19 @@ public class InventorySingletone
                 _slots[slotIndex].ItemCount = 0;
             }
         }
+    }
+
+    private int FindItemToRemove(Item item)
+    {
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            if (_slots[i].Item != null
+                && _slots[i].Item.ItemIndex == item.ItemIndex)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

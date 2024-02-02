@@ -14,9 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: PistolAmmo
   ItemIndex: 6
-  itemType: 2
-  CanBeCompose: 1
+  isStackable: 1
   itemPrefab: {fileID: 9012330285016044302, guid: 31833052aa41447448c306531ec340c7, type: 3}
-  weaponType: 0
-  ammoType: 1
-  magazineAmmoCount: 0

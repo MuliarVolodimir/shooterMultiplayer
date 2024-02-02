@@ -2,15 +2,17 @@ using Unity.Netcode;
 using UnityEngine;
 using DG.Tweening;
 
-public class Weapon : NetworkBehaviour, IItem
+public class FireArmWeapon : NetworkBehaviour, IItem
 {
     [Header("WeaponSettings")]
     [SerializeField] float _fireRate = 0.25f;
     [SerializeField] float _weaponRange = 50f;
+    [SerializeField] int _damage;
 
     [Space(10)]
     [Header("Weapon`s Bullet")]
-    [SerializeField] GameObject _bullet;
+    [SerializeField] Item _bulletItem;
+    [SerializeField] GameObject _bulletPrefab;
     [SerializeField] float _bulletLiveTime;
     [SerializeField] Transform _bulletSpawnPoint;
     [SerializeField] Camera _fpsCam;
@@ -18,39 +20,53 @@ public class Weapon : NetworkBehaviour, IItem
     [Space(10)]
     [Header("WeaponEffects")]
     [SerializeField] GameObject _muzzlePrefab;
-    [SerializeField] private float _timeToDestroy;
+    [SerializeField] float _timeToDestroy;
 
     private float _nextFire;
-
-    void Update()
+    private void Start()
     {
-        //Shoot();
+        _fpsCam = Camera.main;
     }
-
-    private void Shoot()
+    public void Action()
     {
         if (Time.time >= _nextFire)
         {
             _nextFire = Time.time + _fireRate;
-
-            if (Input.GetButton("Fire1"))
+            if (InventorySingletone.Instance.FindExistingItemSlotIndex(_bulletItem) != -1)
             {
-                ShootLogicServerRpc();
+                InventorySingletone.Instance.RemoveItem(_bulletItem, 1, true);
+                TestShoot();
+            } 
+            else
+            {
+                Debug.Log("No Ammo");
             }
         }
     }
 
-    public bool Action()
+    private void TestShoot()
     {
-        if (Time.time >= _nextFire)
-        {
-            _nextFire = Time.time + _fireRate;
+        Vector3 rayStart = _fpsCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        RaycastHit hit;
 
-            Debug.Log("I`m Shooting");
-            return true;
-            //ShootLogicServerRpc();
+        if (Physics.Raycast(rayStart, _fpsCam.transform.forward, out hit, _weaponRange))
+        {
+            if (hit.transform.GetComponent<Character>())
+            {
+                var character = hit.transform.GetComponent<Character>();
+                character.Takedamage(_damage);
+            }
+            Debug.Log(hit.transform.gameObject.name);
         }
-        return false;
+    }
+
+    public Item GetBulletType()
+    {
+        if (_bulletItem == null)
+        {
+            return null;
+        }
+        return _bulletItem;
     }
 
     [ServerRpc]
@@ -59,7 +75,7 @@ public class Weapon : NetworkBehaviour, IItem
         Vector3 rayStart = _fpsCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
 
-        GameObject bullet = Instantiate(_bullet, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
+        GameObject bullet = Instantiate(_bulletPrefab, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
         bullet.GetComponent<NetworkObject>().Spawn();
 
         if (Physics.Raycast(rayStart, _fpsCam.transform.forward, out hit, _weaponRange))

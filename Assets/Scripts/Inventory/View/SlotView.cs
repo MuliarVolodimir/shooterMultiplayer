@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class SlotView : MonoBehaviour
 {
-    public TextMeshProUGUI Text;
+    [SerializeField] TextMeshProUGUI Text;
 
     public void UpdateSlotView(Item item, int count)
     {
@@ -13,15 +13,12 @@ public class SlotView : MonoBehaviour
         else
             Text.text = $"Slot empty";
     }
+
     public void SwitchSelected(bool isSelected)
     {
-        if (isSelected)
-        {
+        if (isSelected) 
             GetComponent<Image>().color = Color.white;
-        }
-        else
-        {
+        else 
             GetComponent<Image>().color = Color.gray;
-        }
     }
 }

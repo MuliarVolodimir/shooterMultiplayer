@@ -160,6 +160,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fireRate: 3
   _weaponRange: 50
+  _damage: 100
+  _bulletItem: {fileID: 11400000, guid: 1dc27696f9d5d5144837ddd8714c12d4, type: 2}
   _bullet: {fileID: 0}
   _bulletLiveTime: 0
   _bulletSpawnPoint: {fileID: 0}
