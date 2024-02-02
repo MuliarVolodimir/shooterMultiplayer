@@ -167,6 +167,7 @@ public class InventoryInput : MonoBehaviour
         if (_inventory[slotIndex].Item != null)
         {
             _currentSelectedItem = _inventory[slotIndex].Item;
+
             if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
             _currentEquipPrefab = Instantiate(_inventory[_currentSelectedSlot].Item.itemPrefab, _armPosition.transform);
         }

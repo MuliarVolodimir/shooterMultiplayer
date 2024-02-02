@@ -133,11 +133,12 @@ public class InventorySingletone
 
     public void RemoveItem(Item item, int removedItemCount, bool isUsed)
     {
-        int slotIndex = FindExistingItemSlotIndex(item);
+        int slotIndex = FindItemToRemove(item);
 
         if (slotIndex != -1)
         {
             _slots[slotIndex].ItemCount -= removedItemCount;
+            OnItemRemoved?.Invoke(_slots[slotIndex].Item, _slots[slotIndex].ItemCount, removedItemCount, slotIndex, isUsed);
 
             if (_slots[slotIndex].ItemCount < 1)
             {
@@ -145,6 +146,19 @@ public class InventorySingletone
                 _slots[slotIndex].ItemCount = 0;
             }
         }
-        OnItemRemoved?.Invoke(_slots[slotIndex].Item, _slots[slotIndex].ItemCount, removedItemCount, slotIndex, isUsed);
+    }
+
+    private int FindItemToRemove(Item item)
+    {
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            if (_slots[i].Item != null
+                && _slots[i].Item.ItemIndex == item.ItemIndex)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

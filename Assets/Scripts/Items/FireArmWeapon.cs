@@ -23,7 +23,10 @@ public class FireArmWeapon : NetworkBehaviour, IItem
     [SerializeField] float _timeToDestroy;
 
     private float _nextFire;
-
+    private void Start()
+    {
+        _fpsCam = Camera.main;
+    }
     public void Action()
     {
         if (Time.time >= _nextFire)
