@@ -70,44 +70,15 @@ public class InventoryInput : MonoBehaviour
         {
             if (_currentEquipPrefab != null)
             {
-                //for Melee Weapon / Зброя ближнього бою
-                if (_currentEquipPrefab.GetComponent<MeleeWeapon>())
+                var item = _currentEquipPrefab.GetComponent<IItem>();
+                if (item != null)
                 {
-                    MeleeWeaponAction();
-                    return;
+                    item.Action();
                 }
-                // for FireArm Weapon / Вогнепальна зброя
-                if (_currentEquipPrefab.GetComponent<FireArmWeapon>())
-                {
-                    FireArmWeaponAction();
-                    return;
-                }
-                // for Healing Item / Лікувальні предмети
-                if (_currentEquipPrefab.GetComponent<HealingItem>())
-                {
-                    HealingItemAction();
-                    return;
-                }
+
+                
             }
         }
-    }
-
-    private void MeleeWeaponAction()
-    {
-        var meleeWeapon = _currentEquipPrefab.GetComponent<MeleeWeapon>();
-        meleeWeapon.Action();
-    }
-
-    private void HealingItemAction()
-    {
-        var healingItem = _currentEquipPrefab.GetComponent<HealingItem>();
-        healingItem.Action();
-    }
-
-    private void FireArmWeaponAction()
-    {
-        var weapon = _currentEquipPrefab.GetComponent<FireArmWeapon>();
-        weapon.Action();
     }
 
     private void InventoryDebugCheck()
