@@ -1,4 +1,6 @@
+using System.Threading.Tasks;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,14 +12,21 @@ public class Character : MonoBehaviour
 
     private int _maxHealth;
 
-    public TextMeshProUGUI _healthTxt;
+    [SerializeField] TextMeshProUGUI _healthTxt;
 
     private void Start()
     {
         _maxHealth = _health;
         _healthTxt = _healthBar.GetComponentInChildren<TextMeshProUGUI>();
-
         UpdateUI(_health);
+    }
+
+    private void Update()
+    {
+        if (transform.position.y <= -50)
+        {
+            Die();
+        }
     }
 
     public void Takedamage(int damage)
@@ -40,10 +49,14 @@ public class Character : MonoBehaviour
         UpdateUI(_health);
     }
 
+    [ServerRpc]
     private void Die()
     {
         //Not all functionality
-        Destroy(gameObject);
+
+        //Despawn function
+        SpawnerSystem.Instance.Despawn(gameObject);
+        _health = _maxHealth;
     }
 
     private void UpdateUI(float health)

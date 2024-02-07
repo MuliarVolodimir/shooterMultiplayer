@@ -23,6 +23,11 @@ public class FPSController : NetworkBehaviour
     float _mouseX;
     float _mouseY;
 
+    public override void OnNetworkSpawn()
+    {
+
+    }
+
     private void Start()
     {
         transform.position = new Vector3(0, 2, 0);

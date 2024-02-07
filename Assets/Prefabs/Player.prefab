@@ -473,11 +473,11 @@ GameObject:
   - component: {fileID: 285143023319364982}
   - component: {fileID: 285143023319364977}
   - component: {fileID: 3114103601194069585}
+  - component: {fileID: 3323802336181283567}
   - component: {fileID: -6533787384511068811}
   - component: {fileID: 285143023319364976}
   - component: {fileID: -7965554035062293561}
   - component: {fileID: 8987163371894734082}
-  - component: {fileID: 3323802336181283567}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -596,6 +596,22 @@ MonoBehaviour:
   _currentItemInfo: {fileID: 7634604672254189089}
   _armPosition: {fileID: 6330333032113060495}
   _currentEquipPrefab: {fileID: 0}
+--- !u!114 &3323802336181283567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2234389728570963406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c89195a82cc6b840b5336c013f9385e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 100
+  _healthBar: {fileID: 3159374663812354370}
+  _healthImage: {fileID: 3285171763891360636}
+  _healthTxt: {fileID: 2250473976624797165}
 --- !u!114 &-6533787384511068811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -681,22 +697,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &3323802336181283567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2234389728570963406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c89195a82cc6b840b5336c013f9385e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _health: 100
-  _healthBar: {fileID: 3159374663812354370}
-  _healthImage: {fileID: 3285171763891360636}
-  _healthTxt: {fileID: 2250473976624797165}
 --- !u!1 &2834067417430929997
 GameObject:
   m_ObjectHideFlags: 0

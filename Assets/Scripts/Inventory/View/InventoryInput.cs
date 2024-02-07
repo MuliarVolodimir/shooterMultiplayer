@@ -74,9 +74,7 @@ public class InventoryInput : MonoBehaviour
                 if (item != null)
                 {
                     item.Action();
-                }
-
-                
+                }                
             }
         }
     }
@@ -92,7 +90,6 @@ public class InventoryInput : MonoBehaviour
     public void AddItem(Item item, int itemCount)
     {
         InventorySingletone.Instance.AddItem(item, itemCount, _currentSelectedSlot);
-
         SwitchSlot(_currentSelectedSlot);
     }
 
@@ -105,7 +102,6 @@ public class InventoryInput : MonoBehaviour
     public void RemoveItem()
     {
         InventorySingletone.Instance.RemoveItem(_currentSelectedItem, 1, false);
-
         SwitchSlot(_currentSelectedSlot);
     }
 
