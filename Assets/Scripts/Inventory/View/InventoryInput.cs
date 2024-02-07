@@ -70,44 +70,13 @@ public class InventoryInput : MonoBehaviour
         {
             if (_currentEquipPrefab != null)
             {
-                //for Melee Weapon / Зброя ближнього бою
-                if (_currentEquipPrefab.GetComponent<MeleeWeapon>())
+                var item = _currentEquipPrefab.GetComponent<IItem>();
+                if (item != null)
                 {
-                    MeleeWeaponAction();
-                    return;
-                }
-                // for FireArm Weapon / Вогнепальна зброя
-                if (_currentEquipPrefab.GetComponent<FireArmWeapon>())
-                {
-                    FireArmWeaponAction();
-                    return;
-                }
-                // for Healing Item / Лікувальні предмети
-                if (_currentEquipPrefab.GetComponent<HealingItem>())
-                {
-                    HealingItemAction();
-                    return;
-                }
+                    item.Action();
+                }                
             }
         }
-    }
-
-    private void MeleeWeaponAction()
-    {
-        var meleeWeapon = _currentEquipPrefab.GetComponent<MeleeWeapon>();
-        meleeWeapon.Action();
-    }
-
-    private void HealingItemAction()
-    {
-        var healingItem = _currentEquipPrefab.GetComponent<HealingItem>();
-        healingItem.Action();
-    }
-
-    private void FireArmWeaponAction()
-    {
-        var weapon = _currentEquipPrefab.GetComponent<FireArmWeapon>();
-        weapon.Action();
     }
 
     private void InventoryDebugCheck()
@@ -121,7 +90,6 @@ public class InventoryInput : MonoBehaviour
     public void AddItem(Item item, int itemCount)
     {
         InventorySingletone.Instance.AddItem(item, itemCount, _currentSelectedSlot);
-
         SwitchSlot(_currentSelectedSlot);
     }
 
@@ -134,7 +102,6 @@ public class InventoryInput : MonoBehaviour
     public void RemoveItem()
     {
         InventorySingletone.Instance.RemoveItem(_currentSelectedItem, 1, false);
-
         SwitchSlot(_currentSelectedSlot);
     }
 
