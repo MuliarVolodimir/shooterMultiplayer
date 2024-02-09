@@ -32,7 +32,12 @@ public class MeleeWeapon : NetworkBehaviour, IItem
 
         if (Physics.Raycast(rayStart, _fpsCam.transform.forward, out hit, _weaponRange))
         {
-            Debug.Log(hit.transform.gameObject.name);
+            if (hit.transform.GetComponent<Character>())
+            {
+                var character = hit.transform.GetComponent<ICharacter>();
+
+                character.TakeDamage(_damage);
+            }
         }
     }
 }

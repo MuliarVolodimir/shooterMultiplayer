@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class Interacting : MonoBehaviour 
@@ -16,16 +17,18 @@ public class Interacting : MonoBehaviour
 
     void Update()
     {
-        PickUpingAndDroping();
+        PickUpingAndDropingServerRpc();
     }
 
-    private void PickUpingAndDroping()
+    [ServerRpc]
+    private void PickUpingAndDropingServerRpc()
     {
         Vector3 rayStart = _camera.ScreenToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
 
+        //Item Info 
         ItemInfo(rayStart, out hit);
-
+        //Pick Up
         if (Input.GetKeyDown(KeyCode.F))
         {
             if (Physics.Raycast(rayStart, _camera.transform.forward, out hit, _interactDistance, _interactLayer))
@@ -35,17 +38,18 @@ public class Interacting : MonoBehaviour
                 {
                     _inventoryInput.AddItem(hitObj.Item, hitObj.Count);
 
-                    Destroy(hit.transform.gameObject, 0.1f);
+                    GameObject gameObj = hit.transform.gameObject;
+                    gameObj.GetComponent<NetworkObject>().Despawn(true);
                 }
             }
             Debug.DrawRay(rayStart, _camera.transform.forward, Color.yellow);
         }
+        //Drop
         if (Input.GetKeyDown(KeyCode.G))
         {
             if (Input.GetKey(KeyCode.LeftAlt))
             {
                 _inventoryInput.RemoveAllItem();
-
                 return;
             }
             _inventoryInput.RemoveItem();

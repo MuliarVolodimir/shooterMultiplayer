@@ -25,19 +25,19 @@ public class FPSController : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        if (!IsOwner)
+        {
+            this.GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            this.GetComponent<InventoryInput>().enabled = false;
+            this.GetComponent<Interacting>().enabled = false;
 
+            this.GetComponent<FPSController>().enabled = false;
+        }
     }
 
     private void Start()
     {
         transform.position = new Vector3(0, 2, 0);
-
-        if (!IsOwner)
-        {
-            this.GetComponent<FPSController>().enabled = false;
-            this.GetComponentInChildren<Camera>().gameObject.SetActive(false);
-            return;
-        }
 
         _cc = GetComponent<CharacterController>();
         _stepOffset = _cc.stepOffset;

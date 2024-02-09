@@ -1,10 +1,9 @@
-using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Character : MonoBehaviour
+public class Character : NetworkBehaviour, ICharacter
 {
     [SerializeField] int _health;
     [SerializeField] GameObject _healthBar;
@@ -23,18 +22,18 @@ public class Character : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.y <= -50)
+        if (transform.position.y <= -10)
         {
-            Die();
+            DieServerRpc();
         }
     }
 
-    public void Takedamage(int damage)
+    public void TakeDamage(int damage)
     {
         _health -= damage;
         if (_health <= 0)
         {
-            Die();
+            DieServerRpc();
         }
         UpdateUI(_health);
     }
@@ -50,7 +49,7 @@ public class Character : MonoBehaviour
     }
 
     [ServerRpc]
-    private void Die()
+    private void DieServerRpc()
     {
         //Not all functionality
 
@@ -63,8 +62,8 @@ public class Character : MonoBehaviour
     {
         if (_healthBar != null)
         {
-            _healthImage.fillAmount = health/_maxHealth;
-            Debug.Log("bot " + health/_maxHealth);
+            _healthImage.fillAmount = health / _maxHealth;
+            Debug.Log("bot " + health / _maxHealth);
             _healthTxt.text = _health.ToString();
         }
     }

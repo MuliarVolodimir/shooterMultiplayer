@@ -35,7 +35,7 @@ public class FireArmWeapon : NetworkBehaviour, IItem
             if (InventorySingletone.Instance.FindExistingItemSlotIndex(_bulletItem) != -1)
             {
                 InventorySingletone.Instance.RemoveItem(_bulletItem, 1, true);
-                TestShoot();
+                ShootServerRpc();
             } 
             else
             {
@@ -44,7 +44,8 @@ public class FireArmWeapon : NetworkBehaviour, IItem
         }
     }
 
-    private void TestShoot()
+    [ServerRpc]
+    private void ShootServerRpc()
     {
         Vector3 rayStart = _fpsCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
@@ -53,24 +54,14 @@ public class FireArmWeapon : NetworkBehaviour, IItem
         {
             if (hit.transform.GetComponent<Character>())
             {
-                var character = hit.transform.GetComponent<Character>();
-                character.Takedamage(_damage);
+                var character = hit.transform.GetComponent<ICharacter>();
+                character.TakeDamage(_damage);
             }
             Debug.Log(hit.transform.gameObject.name);
         }
     }
 
-    public Item GetBulletType()
-    {
-        if (_bulletItem == null)
-        {
-            return null;
-        }
-        return _bulletItem;
-    }
-
-    [ServerRpc]
-    void ShootLogicServerRpc()
+    void ShootLogic()
     {
         Vector3 rayStart = _fpsCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;

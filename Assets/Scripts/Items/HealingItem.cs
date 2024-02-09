@@ -19,6 +19,7 @@ public class HealingItem : MonoBehaviour, IItem
         {
             _nextUse = Time.time + _useRate;
             InventorySingletone.Instance.RemoveItem(_item, 1, true);
+
             Debug.Log("Player healed by " + _healAmount + " point`s");
         }
     }

@@ -725,10 +725,10 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: e1457d01-3563-4035-a23d-e6ca59bf05b9
+  cloudProjectId: dcbb9036-41be-4076-b1a9-e085a7833c36
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: MultiplayerGame
+  projectName: MultiplayerGame (1)
   organizationId: volodyamuliar
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
