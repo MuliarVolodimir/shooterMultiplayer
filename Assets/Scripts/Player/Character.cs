@@ -63,7 +63,6 @@ public class Character : NetworkBehaviour, ICharacter
         if (_healthBar != null)
         {
             _healthImage.fillAmount = health / _maxHealth;
-            Debug.Log("bot " + health / _maxHealth);
             _healthTxt.text = _health.ToString();
         }
     }
