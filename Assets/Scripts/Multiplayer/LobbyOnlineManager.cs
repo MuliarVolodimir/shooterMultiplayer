@@ -167,7 +167,6 @@ public class LobbyOnlineManager : NetworkBehaviour
             Debug.Log(e);
             return default;
         }
-
     }
 
     private async Task<JoinAllocation> JoinRelay(string joinCode)
@@ -236,10 +235,12 @@ public class LobbyOnlineManager : NetworkBehaviour
             };
             string lobbyCode = _codeInputField.text;
             var lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
+            _currentLobby = lobby;
+
+            NetworkManager.Singleton.StartClient();
+            //SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
 
             Debug.Log($"Joined by code {lobby.LobbyCode} to private {lobby.Name} lobby, Players: {lobby.Players.Count}");
-            NetworkManager.Singleton.StartClient();
-            SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
         }
         catch (LobbyServiceException e)
         {
@@ -255,11 +256,13 @@ public class LobbyOnlineManager : NetworkBehaviour
             {
                 Player = GetPlayer()
             };
-            _currentLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyID, options);
+            var lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyID, options);
+            _currentLobby = lobby;
 
-            Debug.Log($"Joined to {_currentLobby.Name}, {_currentLobby.Players.Count}/{_currentLobby.MaxPlayers}");
             NetworkManager.Singleton.StartClient();
-            SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
+            //SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
+
+            Debug.Log($"Joined to {lobby.Name}, {lobby.Players.Count}/{lobby.MaxPlayers}");   
         }
         catch (LobbyServiceException e)
         {
@@ -277,15 +280,17 @@ public class LobbyOnlineManager : NetworkBehaviour
                 Player = GetPlayer()
             };
             var lobby = await LobbyService.Instance.QuickJoinLobbyAsync(options);
+            _currentLobby = lobby;
 
             string relayJoinKey= lobby.Data[KEY_RELAYL_JOIN_CODE].Value;
             JoinAllocation join = await JoinRelay(relayJoinKey);
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(join, "dtls"));
 
-            Debug.Log($"Joined to {lobby.Name}, PlayerCount: {lobby.Players.Count}, LobbyID: {lobby.Id}");
             NetworkManager.Singleton.StartClient();
-            SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
+            //SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
+
+            Debug.Log($"Joined to {lobby.Name}, PlayerCount: {lobby.Players.Count}, LobbyID: {lobby.Id}");
         }
         catch (LobbyServiceException e)
         {
