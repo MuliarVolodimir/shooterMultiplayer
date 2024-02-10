@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,19 +14,24 @@ public class MainMenuUI : MonoBehaviour
 
     [SerializeField] List<Button> _closeButtons;
 
-    [SerializeField] GameObject _onlineGamePanel;
     [SerializeField] GameObject _localGamePanel;
     [SerializeField] GameObject _settingsPanel;
+    [SerializeField] TMP_InputField _playerNameIF;
 
     private void Start()
     {
         InitCloseButtons();
 
         _localGameButton.onClick.AddListener(() => { ShowHidePanel(_localGamePanel); });
-        _onlineGameButton.onClick.AddListener(() => { ShowHidePanel(_onlineGamePanel); });
+        _onlineGameButton.onClick.AddListener(() => 
+        { 
+            SceneLoader.Load(SceneLoader.Scene.LobbyOnlineCreateScene); 
+        });
         _settingsbutton.onClick.AddListener(() => { ShowHidePanel(_settingsPanel); });
 
         _quitbutton.onClick.AddListener(Quit);
+
+        LobbyOnlineManager.Instance.SetPlayerName(_playerNameIF);
 
         HideAllPanels();
     }
@@ -40,7 +46,6 @@ public class MainMenuUI : MonoBehaviour
 
     private void HideAllPanels()
     {
-        _onlineGamePanel.SetActive(false);
         _localGamePanel.SetActive(false);
         _settingsPanel.SetActive(false);
     }

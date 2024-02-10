@@ -8,7 +8,13 @@ public class SceneLoader : MonoBehaviour
     { 
         MainMenuScene,
         LobbyScene,
-        GameScene
+        GameScene,
+        LobbyOnlineCreateScene
+    }
+
+    public static void Load(Scene scene)
+    {
+        SceneManager.LoadScene(scene.ToString(), LoadSceneMode.Single);
     }
 
     public static void LoadNetwork(Scene scene)
