@@ -350,17 +350,14 @@ public class LobbyOnlineManager : NetworkBehaviour
             {
                 Player = GetPlayer()
             };
-            string lobbyCode = joinCode;
-            var lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
+            var lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(joinCode, options);
             _currentLobby = lobby;
 
             string relayJoinKey = lobby.Data[KEY_RELAYL_JOIN_CODE].Value;
             JoinAllocation join = await JoinRelay(relayJoinKey);
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(join, "dtls"));
-
             NetworkManager.Singleton.StartClient();
-            //SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
 
             Debug.Log($"Joined by code {lobby.LobbyCode} to private {lobby.Name} lobby, Players: {lobby.Players.Count}");
         }
@@ -386,9 +383,7 @@ public class LobbyOnlineManager : NetworkBehaviour
             JoinAllocation join = await JoinRelay(relayJoinKey);
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(join, "dtls"));
-
             NetworkManager.Singleton.StartClient();
-            //SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
 
             Debug.Log($"Joined to {lobby.Name}, PlayerCount: {lobby.Players.Count}, LobbyID: {lobby.Id}");
         }
@@ -426,7 +421,7 @@ public class LobbyOnlineManager : NetworkBehaviour
             await LobbyService.Instance.RemovePlayerAsync(_currentLobby.Id, playerID);
             _currentLobby = null;
 
-            if (IsClient)
+            if (!IsHost())
             {
                 NetworkManager.Singleton.Shutdown();
                 SceneLoader.Load(SceneLoader.Scene.MainMenuScene);

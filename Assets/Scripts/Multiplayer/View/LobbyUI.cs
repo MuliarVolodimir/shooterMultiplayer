@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,6 +37,7 @@ public class LobbyUI : MonoBehaviour
         foreach (Player player in LobbyOnlineManager.Instance.GetLobby().Players)
         {
             LobbyOnlineManager.Instance.VisualizeRoomDetails(_playerInfoPrefab, _playerContent);
+            _playerCount.text = LobbyOnlineManager.Instance.GetLobby().Players.Count.ToString();
             Debug.Log("Player: " + player.Data["PlayerName"].Value);
         }
     }
