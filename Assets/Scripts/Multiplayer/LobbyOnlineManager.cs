@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Unity.Services.Relay;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
+using System;
 
 public class LobbyOnlineManager : NetworkBehaviour
 {
@@ -28,7 +29,13 @@ public class LobbyOnlineManager : NetworkBehaviour
     private string _playerID;
 
     private int _playerCount = 4;
-    private float _LobbyUpdateTime = 4;
+    private float _lobbyUpdateTime = 4;
+
+    public event Action OnCreateLobbyStarted;
+    public event Action OnCreateLobbyFailed;
+    public event Action OnTryJoin;
+    public event Action OnJoinFailed;
+
 
     private void Awake()
     {
@@ -129,6 +136,7 @@ public class LobbyOnlineManager : NetworkBehaviour
 
     private async void JoinLobbyByID(string lobbyID)
     {
+        OnTryJoin?.Invoke();
         try
         {
             JoinLobbyByIdOptions options = new JoinLobbyByIdOptions()
@@ -150,6 +158,7 @@ public class LobbyOnlineManager : NetworkBehaviour
         }
         catch (LobbyServiceException e)
         {
+            OnJoinFailed?.Invoke();
             Debug.Log(e);
         }
     }
@@ -279,10 +288,10 @@ public class LobbyOnlineManager : NetworkBehaviour
     {
         if (_currentLobby != null)
         {
-            _LobbyUpdateTime -= Time.deltaTime;
-            if (_LobbyUpdateTime <= 0)
+            _lobbyUpdateTime -= Time.deltaTime;
+            if (_lobbyUpdateTime <= 0)
             {
-                _LobbyUpdateTime = 2f;
+                _lobbyUpdateTime = 2f;
                 try
                 {
                     if (IsinLobby())
@@ -305,6 +314,7 @@ public class LobbyOnlineManager : NetworkBehaviour
 
     public async void CreateLobby(string lobbyName, int MaxPlayer, bool isPrivate)
     {
+        OnCreateLobbyStarted?.Invoke();
         try
         {
             CreateLobbyOptions options = new CreateLobbyOptions
@@ -337,13 +347,14 @@ public class LobbyOnlineManager : NetworkBehaviour
         }
         catch (LobbyServiceException ex)
         {
-
+            OnCreateLobbyFailed?.Invoke();
             Debug.Log(ex);
         }
     }
 
     public async void JoinToLobbyByCode(string joinCode)
     {
+        OnTryJoin?.Invoke();
         try
         {
             JoinLobbyByCodeOptions options = new JoinLobbyByCodeOptions()
@@ -363,12 +374,14 @@ public class LobbyOnlineManager : NetworkBehaviour
         }
         catch (LobbyServiceException e)
         {
+            OnJoinFailed?.Invoke();
             Debug.Log(e);
         }
     }
 
     public async void QuickJoinToLobby()
     {
+        OnTryJoin?.Invoke();
         try
         {
             // Quick-join a random lobby
@@ -389,6 +402,7 @@ public class LobbyOnlineManager : NetworkBehaviour
         }
         catch (LobbyServiceException e)
         {
+            OnJoinFailed?.Invoke();
             Debug.Log("failed to quick conection");
             Debug.Log(e);
         }

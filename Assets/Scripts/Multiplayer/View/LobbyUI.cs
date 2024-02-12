@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -29,7 +30,14 @@ public class LobbyUI : MonoBehaviour
 
     private void Update()
     {
+        HandleLobbyUpdate();
+    }
+
+    private void HandleLobbyUpdate()
+    {
         LobbyOnlineManager.Instance.HandleRoomUpdate(_playerInfoPrefab, _playerContent);
+        var lobby = LobbyOnlineManager.Instance.GetLobby();
+        _playerCount.text = $"Players: {lobby.Players.Count}/{lobby.MaxPlayers}";
     }
 
     private void EnterLobby()
@@ -37,7 +45,6 @@ public class LobbyUI : MonoBehaviour
         foreach (Player player in LobbyOnlineManager.Instance.GetLobby().Players)
         {
             LobbyOnlineManager.Instance.VisualizeRoomDetails(_playerInfoPrefab, _playerContent);
-            _playerCount.text = LobbyOnlineManager.Instance.GetLobby().Players.Count.ToString();
             Debug.Log("Player: " + player.Data["PlayerName"].Value);
         }
     }
