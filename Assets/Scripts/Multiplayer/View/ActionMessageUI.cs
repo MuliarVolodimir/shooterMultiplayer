@@ -21,7 +21,7 @@ public class ActionMessageUI : MonoBehaviour
 
     private void OnJoinFailed()
     {
-        ShowMessage("//Faild ro Join!//");
+        ShowMessage("//Faild to Join!//");
     }
 
     private void OnTryJoin()

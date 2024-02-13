@@ -24,7 +24,11 @@ public class LobbyUI : MonoBehaviour
         _playerCount.text = $"Players: {lobby.Players.Count}/{lobby.MaxPlayers}";
 
         _leaveLobbyButton.onClick.AddListener(() => { LeaveLobby(); } );
-        _startGameButton.onClick.AddListener(() => { StartGame(); } );
+
+        if (LobbyOnlineManager.Instance.IsHost())
+            _startGameButton.onClick.AddListener(() => { StartGame(); });
+        else
+            Destroy(_startGameButton.gameObject);
         EnterLobby();
     }
 

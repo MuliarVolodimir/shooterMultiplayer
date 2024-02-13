@@ -14,11 +14,19 @@ public class ShooterGameManager : NetworkBehaviour
 
     private void OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
     {
-        foreach (ulong clientID in NetworkManager.Singleton.ConnectedClientsIds)
+        if (IsServer)
         {
-            GameObject player = Instantiate(_playerPrefab);
-            player.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, true);
-            SpawnerSystem.Instance.Despawn(_playerPrefab);
+            foreach (ulong clientID in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                GameObject player = Instantiate(_playerPrefab);
+                player.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, true);
+                SpawnerSystem.Instance.Despawn(_playerPrefab);
+            }
         }
+    }
+
+    public override void OnDestroy()
+    {
+        NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadEventCompleted;
     }
 }
