@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
-public class InventoryInput : MonoBehaviour
+public class InventoryInput : NetworkBehaviour
 {
     [SerializeField] List<SlotView> _slots;
     [SerializeField] TextMeshProUGUI _currentItemInfo;
@@ -37,6 +38,7 @@ public class InventoryInput : MonoBehaviour
             if (!isUsed)
             {
                 GameObject gameObject = Instantiate(item.itemPrefab, transform.position, transform.rotation);
+                gameObject.GetComponent<NetworkObject>().Spawn();
                 gameObject.GetComponent<ItemObject>().Count = removedItemCount;
             }
 
@@ -126,7 +128,10 @@ public class InventoryInput : MonoBehaviour
     private void SwitchSlot(int slotIndex)
     {
         _slots[_currentSelectedSlot].SwitchSelected(false);
-        if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
+        if (_currentEquipPrefab != null)
+        {
+            _currentEquipPrefab.GetComponent<NetworkObject>().Despawn(true);
+        }
 
         _currentSelectedSlot = slotIndex;
         _slots[_currentSelectedSlot].SwitchSelected(true);
@@ -134,12 +139,21 @@ public class InventoryInput : MonoBehaviour
         if (_inventory[slotIndex].Item != null)
         {
             _currentSelectedItem = _inventory[slotIndex].Item;
-
-            if (_currentEquipPrefab != null) Destroy(_currentEquipPrefab);
-            _currentEquipPrefab = Instantiate(_inventory[_currentSelectedSlot].Item.itemPrefab, _armPosition.transform);
+            CurrEquipPrefabChangeServerRpc();
         }
 
         UpdateSlotView(_inventory[slotIndex].Item, _inventory[slotIndex].ItemCount, slotIndex);
+    }
+
+    [ServerRpc]
+    private void CurrEquipPrefabChangeServerRpc()
+    {
+        _currentEquipPrefab = Instantiate(_inventory[_currentSelectedSlot].Item.itemPrefab, _armPosition.transform);
+        var netObject = _currentEquipPrefab.GetComponent<NetworkObject>();
+        netObject.Spawn();
+
+        var followTransform = _currentEquipPrefab.GetComponent<FollowParentTransform>();
+        followTransform.SetFollowTarget(_armPosition);
     }
 
     private void UpdateSlotView(Item item, int itemCount, int slotIndex)
