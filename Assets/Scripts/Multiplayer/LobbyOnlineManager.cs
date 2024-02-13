@@ -151,8 +151,9 @@ public class LobbyOnlineManager : NetworkBehaviour
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(join, "dtls"));
 
-            NetworkManager.Singleton.StartClient();
-            //SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
+            if (join != null) NetworkManager.Singleton.StartClient();
+
+            //NetworkManager.SceneManager.SetClientSynchronizationMode(LoadSceneMode.Additive);
 
             Debug.Log($"Joined to {lobby.Name}, {lobby.Players.Count}/{lobby.MaxPlayers}");
         }
@@ -368,7 +369,9 @@ public class LobbyOnlineManager : NetworkBehaviour
             JoinAllocation join = await JoinRelay(relayJoinKey);
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(join, "dtls"));
-            NetworkManager.Singleton.StartClient();
+            if (join != null) NetworkManager.Singleton.StartClient();
+
+            //NetworkManager.SceneManager.SetClientSynchronizationMode(LoadSceneMode.Additive);
 
             Debug.Log($"Joined by code {lobby.LobbyCode} to private {lobby.Name} lobby, Players: {lobby.Players.Count}");
         }
@@ -395,8 +398,11 @@ public class LobbyOnlineManager : NetworkBehaviour
             string relayJoinKey = lobby.Data[KEY_RELAYL_JOIN_CODE].Value;
             JoinAllocation join = await JoinRelay(relayJoinKey);
 
+
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(join, "dtls"));
-            NetworkManager.Singleton.StartClient();
+            if (join != null) NetworkManager.Singleton.StartClient();
+
+            //NetworkManager.SceneManager.SetClientSynchronizationMode(LoadSceneMode.Additive);
 
             Debug.Log($"Joined to {lobby.Name}, PlayerCount: {lobby.Players.Count}, LobbyID: {lobby.Id}");
         }
@@ -413,11 +419,7 @@ public class LobbyOnlineManager : NetworkBehaviour
         try
         {
             await LobbyService.Instance.RemovePlayerAsync(_currentLobby.Id, _playerID);
-            if (_currentLobby.Players.Count <= 0)
-            {
-                await LobbyService.Instance.DeleteLobbyAsync(_currentLobby.Id);
-                _currentLobby = null;
-            }
+            _currentLobby = null;
 
             NetworkManager.Singleton.Shutdown();
             SceneLoader.Load(SceneLoader.Scene.MainMenuScene);

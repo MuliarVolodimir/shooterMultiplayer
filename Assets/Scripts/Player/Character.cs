@@ -48,7 +48,7 @@ public class Character : NetworkBehaviour, ICharacter
         UpdateUI(_health);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void DieServerRpc()
     {
         //Not all functionality
