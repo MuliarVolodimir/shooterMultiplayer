@@ -42,7 +42,6 @@ public class FPSController : NetworkBehaviour
         _cc = GetComponent<CharacterController>();
         _stepOffset = _cc.stepOffset;
         _startScale = transform.localScale.y;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()

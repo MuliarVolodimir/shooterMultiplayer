@@ -23,10 +23,6 @@ public class ShooterGameManager : NetworkBehaviour
                 SpawnerSystem.Instance.Despawn(_playerPrefab);
             }
         }
-    }
-
-    public override void OnDestroy()
-    {
-        NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadEventCompleted;
+        //LobbyOnlineManager.Instance.DeleteLobb();
     }
 }

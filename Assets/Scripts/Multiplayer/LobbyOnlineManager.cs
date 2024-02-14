@@ -22,14 +22,16 @@ public class LobbyOnlineManager : NetworkBehaviour
     private const string KEY_RELAYL_JOIN_CODE = "KEY_RELAY_JOIN";
 
     private Lobby _currentLobby;
-    private float _lobbyHeartBeat;
-    private bool _isRefreshing;
-    private float _nextLobbyUpdate;
-    private float _updateRate = 15;
-    private string _playerID;
 
+    private float _lobbyHeartBeat;
+    private float _lobbyHeartBeatTime = 15;
+
+    private bool _isRefreshing;
+    private float _nextLobbyRefresh;
+    private float _refreshRate = 10;
+
+    private string _playerID;
     private int _playerCount = 4;
-    private float _lobbyUpdateTime = 4;
 
     public event Action OnCreateLobbyStarted;
     public event Action OnCreateLobbyFailed;
@@ -74,8 +76,7 @@ public class LobbyOnlineManager : NetworkBehaviour
             _lobbyHeartBeat -= Time.deltaTime;
             if (_lobbyHeartBeat < 0f)
             {
-                float maxHeartBeat = 15;
-                _lobbyHeartBeat = maxHeartBeat;
+                _lobbyHeartBeat = _lobbyHeartBeatTime;
 
                 await LobbyService.Instance.SendHeartbeatPingAsync(_currentLobby.Id);
                 Debug.Log($"{_currentLobby.Name} LobbyHeartBeat, Players: {_currentLobby.Players.Count}/{_currentLobby.MaxPlayers}, LobbyCode {_currentLobby.LobbyCode}");
@@ -151,8 +152,9 @@ public class LobbyOnlineManager : NetworkBehaviour
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(join, "dtls"));
 
-            NetworkManager.Singleton.StartClient();
-            //SceneLoader.LoadNetwork(SceneLoader.Scene.LobbyScene);
+            if (join != null) NetworkManager.Singleton.StartClient();
+
+            //NetworkManager.SceneManager.SetClientSynchronizationMode(LoadSceneMode.Additive);
 
             Debug.Log($"Joined to {lobby.Name}, {lobby.Players.Count}/{lobby.MaxPlayers}");
         }
@@ -250,65 +252,10 @@ public class LobbyOnlineManager : NetworkBehaviour
 
     public void RefreshLobbies(GameObject lobbyItemPrefab, GameObject lobbyContent)
     {
-        if (Time.time >= _nextLobbyUpdate && AuthenticationService.Instance.IsSignedIn)
+        if (Time.time >= _nextLobbyRefresh && AuthenticationService.Instance.IsSignedIn)
         {
-            _nextLobbyUpdate = Time.time + _updateRate;
+            _nextLobbyRefresh = Time.time + _refreshRate;
             ShowLobbies(lobbyItemPrefab, lobbyContent);
-        }
-    }
-
-    public void VisualizeRoomDetails(GameObject playerInfoPrefab, GameObject playerContent)
-    {
-        for (int i = 0; i < playerContent.transform.childCount; i++)
-        {
-            Destroy(playerContent.transform.GetChild(i).gameObject);
-        }
-
-        if (Instance.IsinLobby())
-        {
-            Lobby currentLobby = GetLobby();
-            var playerID = GetPlayerID();
-            foreach (Player player in currentLobby.Players)
-            {
-                GameObject newPlayerInfo = Instantiate(playerInfoPrefab, playerContent.transform);
-                newPlayerInfo.GetComponentInChildren<TextMeshProUGUI>().text = player.Data["PlayerName"].Value;
-
-                if (Instance.IsHost() && player.Id != playerID)
-                {
-                    Button kickBtn = newPlayerInfo.GetComponentInChildren<Button>(true);
-
-                    kickBtn.onClick.AddListener(() => { KickPlayer(player.Id); });
-                    kickBtn.gameObject.SetActive(true);
-                }
-            }
-        }
-    }
-
-    public async void HandleRoomUpdate(GameObject playerInfoPrefab, GameObject playerContent)
-    {
-        if (_currentLobby != null)
-        {
-            _lobbyUpdateTime -= Time.deltaTime;
-            if (_lobbyUpdateTime <= 0)
-            {
-                _lobbyUpdateTime = 2f;
-                try
-                {
-                    if (IsinLobby())
-                    {
-                        _currentLobby = await LobbyService.Instance.GetLobbyAsync(_currentLobby.Id);
-                        VisualizeRoomDetails(playerInfoPrefab, playerContent);
-                    }
-                }
-                catch (LobbyServiceException e)
-                {
-                    Debug.Log(e);
-                    if ((e.Reason == LobbyExceptionReason.Forbidden || e.Reason == LobbyExceptionReason.LobbyNotFound))
-                    {
-                        LeaveLobby();
-                    }
-                }
-            }
         }
     }
 
@@ -368,7 +315,9 @@ public class LobbyOnlineManager : NetworkBehaviour
             JoinAllocation join = await JoinRelay(relayJoinKey);
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(join, "dtls"));
-            NetworkManager.Singleton.StartClient();
+            if (join != null) NetworkManager.Singleton.StartClient();
+
+            //NetworkManager.SceneManager.SetClientSynchronizationMode(LoadSceneMode.Additive);
 
             Debug.Log($"Joined by code {lobby.LobbyCode} to private {lobby.Name} lobby, Players: {lobby.Players.Count}");
         }
@@ -395,8 +344,11 @@ public class LobbyOnlineManager : NetworkBehaviour
             string relayJoinKey = lobby.Data[KEY_RELAYL_JOIN_CODE].Value;
             JoinAllocation join = await JoinRelay(relayJoinKey);
 
+
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(join, "dtls"));
-            NetworkManager.Singleton.StartClient();
+            if (join != null) NetworkManager.Singleton.StartClient();
+
+            //NetworkManager.SceneManager.SetClientSynchronizationMode(LoadSceneMode.Additive);
 
             Debug.Log($"Joined to {lobby.Name}, PlayerCount: {lobby.Players.Count}, LobbyID: {lobby.Id}");
         }
@@ -413,11 +365,7 @@ public class LobbyOnlineManager : NetworkBehaviour
         try
         {
             await LobbyService.Instance.RemovePlayerAsync(_currentLobby.Id, _playerID);
-            if (_currentLobby.Players.Count <= 0)
-            {
-                await LobbyService.Instance.DeleteLobbyAsync(_currentLobby.Id);
-                _currentLobby = null;
-            }
+            _currentLobby = null;
 
             NetworkManager.Singleton.Shutdown();
             SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
@@ -459,9 +407,9 @@ public class LobbyOnlineManager : NetworkBehaviour
 
     public bool IsinLobby()
     {
-        foreach (Player _player in _currentLobby.Players)
+        foreach (Player player in _currentLobby.Players)
         {
-            if (_player.Id == _playerID)
+            if (player.Id == _playerID)
             {
                 return true;
             }

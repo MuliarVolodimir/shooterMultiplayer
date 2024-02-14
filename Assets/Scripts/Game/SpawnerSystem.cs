@@ -22,11 +22,7 @@ public class SpawnerSystem : NetworkBehaviour, ISpawnerSystem
 
     public void Despawn(GameObject obj)
     {
-        if (IsServer)
-        {
-            int spawnerIndex = Random.Range(0, _spawnPoints.Count);
-            _spawnPoints[spawnerIndex].Spawn(obj);
-        }
-        
+        int spawnerIndex = Random.Range(0, _spawnPoints.Count);
+        _spawnPoints[spawnerIndex].Spawn(obj);
     }
 }
