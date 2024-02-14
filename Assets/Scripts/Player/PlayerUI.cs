@@ -1,5 +1,3 @@
-using System;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,8 +39,7 @@ public class PlayerUI : MonoBehaviour
 
     private void BackToMainMenu()
     {
-        NetworkManager.Singleton.Shutdown();
-        SceneLoader.Load(SceneLoader.Scene.MainMenuScene);
+        LobbyOnlineManager.Instance.LeaveLobby();
     }
 
     void ShowHidePanel(GameObject panel)

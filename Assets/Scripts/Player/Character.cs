@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Character : NetworkBehaviour, ICharacter
 {
-    [SerializeField] int _health;
+    [SerializeField] NetworkVariable<int> _health;
     [SerializeField] GameObject _healthBar;
     [SerializeField] Image _healthImage;
 
@@ -15,9 +15,9 @@ public class Character : NetworkBehaviour, ICharacter
 
     private void Start()
     {
-        _maxHealth = _health;
+        _maxHealth = _health.Value;
         _healthTxt = _healthBar.GetComponentInChildren<TextMeshProUGUI>();
-        UpdateUI(_health);
+        UpdateUI(_health.Value);
     }
 
     private void Update()
@@ -30,22 +30,22 @@ public class Character : NetworkBehaviour, ICharacter
 
     public void TakeDamage(int damage)
     {
-        _health -= damage;
-        if (_health <= 0)
+        _health.Value -= damage;
+        if (_health.Value <= 0)
         {
             DieServerRpc();
         }
-        UpdateUI(_health);
+        UpdateUI(_health.Value);
     }
 
     public void TakeHealth(int healAmount)
     {
-        _health += healAmount;
-        if (_health >= _maxHealth)
+        _health.Value += healAmount;
+        if (_health.Value >= _maxHealth)
         {
             Debug.Log("Healing " + healAmount);
         }
-        UpdateUI(_health);
+        UpdateUI(_health.Value);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -55,7 +55,7 @@ public class Character : NetworkBehaviour, ICharacter
 
         //Despawn function
         SpawnerSystem.Instance.Despawn(gameObject);
-        _health = _maxHealth;
+        _health.Value = _maxHealth;
     }
 
     private void UpdateUI(float health)
@@ -63,7 +63,7 @@ public class Character : NetworkBehaviour, ICharacter
         if (_healthBar != null)
         {
             _healthImage.fillAmount = health / _maxHealth;
-            _healthTxt.text = _health.ToString();
+            _healthTxt.text = _health.Value.ToString();
         }
     }
 }

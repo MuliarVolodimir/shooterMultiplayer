@@ -16,7 +16,7 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene(scene.ToString(), LoadSceneMode.Single);
     }
-
+    
     public static void LoadNetwork(Scene scene)
     {
         NetworkManager.Singleton.SceneManager.LoadScene(scene.ToString(), LoadSceneMode.Single);
